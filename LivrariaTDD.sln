@@ -3,17 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LivrariaTDD.View", "LivrariaTDD.View\LivrariaTDD.View.csproj", "{B0E5E622-BAF5-4F2A-8ECC-51B42AB1B21C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LivrariaTDD.ViewTests", "LivrariaTDD.ViewTests\LivrariaTDD.ViewTests.csproj", "{099FFFD7-F772-4671-814E-9275319BE3F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LivrariaTDD.Tests", "LivrariaTDD.Tests\LivrariaTDD.Tests.csproj", "{099FFFD7-F772-4671-814E-9275319BE3F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LivrariaTDD.BRL", "LivrariaTDD.BRL\LivrariaTDD.BRL.csproj", "{F9D76BBC-0632-43BF-95B7-41DA1EA09EBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LivrariaTDD.DAL", "LivrariaTDD.DAL\LivrariaTDD.DAL.csproj", "{0DCCA29B-8A80-4601-9807-1BF53D1FF661}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LivrariaTDD.BRLTests", "LivrariaTDD.BRLTests\LivrariaTDD.BRLTests.csproj", "{C329EED8-2902-47CA-A38B-99BA8C7B3610}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LivrariaTDD.DALTests", "LivrariaTDD.DALTests\LivrariaTDD.DALTests.csproj", "{7DF387C2-56D0-4D64-8A36-8662C3B55C78}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LivrariaTDD.Infrastructure", "LivrariaTDD.Infrastructure\LivrariaTDD.Infrastructure.csproj", "{97FD5BF4-3100-4F1E-96A5-85F6AA978217}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LivrariaTDD.DependencyInjection", "LivrariaTDD.DependencyInjection\LivrariaTDD.DependencyInjection.csproj", "{8F98BB9C-7526-4F67-B1C3-1042A09C73D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,18 +35,14 @@ Global
 		{0DCCA29B-8A80-4601-9807-1BF53D1FF661}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DCCA29B-8A80-4601-9807-1BF53D1FF661}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DCCA29B-8A80-4601-9807-1BF53D1FF661}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C329EED8-2902-47CA-A38B-99BA8C7B3610}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C329EED8-2902-47CA-A38B-99BA8C7B3610}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C329EED8-2902-47CA-A38B-99BA8C7B3610}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C329EED8-2902-47CA-A38B-99BA8C7B3610}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7DF387C2-56D0-4D64-8A36-8662C3B55C78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DF387C2-56D0-4D64-8A36-8662C3B55C78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DF387C2-56D0-4D64-8A36-8662C3B55C78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DF387C2-56D0-4D64-8A36-8662C3B55C78}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97FD5BF4-3100-4F1E-96A5-85F6AA978217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{97FD5BF4-3100-4F1E-96A5-85F6AA978217}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97FD5BF4-3100-4F1E-96A5-85F6AA978217}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97FD5BF4-3100-4F1E-96A5-85F6AA978217}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F98BB9C-7526-4F67-B1C3-1042A09C73D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F98BB9C-7526-4F67-B1C3-1042A09C73D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F98BB9C-7526-4F67-B1C3-1042A09C73D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F98BB9C-7526-4F67-B1C3-1042A09C73D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

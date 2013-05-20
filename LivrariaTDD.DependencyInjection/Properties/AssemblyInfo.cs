@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("LivrariaTDD.BRLTests")]
+[assembly: AssemblyTitle("LivrariaTDD.DependencyInjection")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LivrariaTDD.BRLTests")]
+[assembly: AssemblyProduct("LivrariaTDD.DependencyInjection")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("454de7e2-e9d5-4cc0-9c1e-338c9c961cc2")]
+[assembly: Guid("db0a4e6f-73b2-4cbc-b8e6-23dbf780f644")]
 
 // Version information for an assembly consists of the following four values:
 //

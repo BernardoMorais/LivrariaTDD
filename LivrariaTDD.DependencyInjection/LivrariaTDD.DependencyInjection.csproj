@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F9D76BBC-0632-43BF-95B7-41DA1EA09EBC}</ProjectGuid>
+    <ProjectGuid>{8F98BB9C-7526-4F67-B1C3-1042A09C73D6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LivrariaTDD.BRL</RootNamespace>
-    <AssemblyName>LivrariaTDD.BRL</AssemblyName>
+    <RootNamespace>LivrariaTDD.DependencyInjection</RootNamespace>
+    <AssemblyName>LivrariaTDD.DependencyInjection</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,19 +30,42 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web">
+      <HintPath>..\packages\Ninject.Web.3.0.0.5\lib\net45-full\Ninject.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common">
+      <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebActivator">
+      <HintPath>..\packages\WebActivator.1.5.3\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ListagemDeProdutosBusiness.cs" />
+    <Compile Include="App_Start\NinjectWeb.cs" />
+    <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="Modules\BRLModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LivrariaTDD.BRL\LivrariaTDD.BRL.csproj">
+      <Project>{f9d76bbc-0632-43bf-95b7-41da1ea09ebc}</Project>
+      <Name>LivrariaTDD.BRL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LivrariaTDD.DAL\LivrariaTDD.DAL.csproj">
       <Project>{0dcca29b-8a80-4601-9807-1bf53d1ff661}</Project>
       <Name>LivrariaTDD.DAL</Name>
@@ -51,6 +74,13 @@
       <Project>{97fd5bf4-3100-4f1e-96a5-85f6aa978217}</Project>
       <Name>LivrariaTDD.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LivrariaTDD.View\LivrariaTDD.View.csproj">
+      <Project>{b0e5e622-baf5-4f2a-8ecc-51b42ab1b21c}</Project>
+      <Name>LivrariaTDD.View</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
