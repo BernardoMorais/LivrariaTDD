@@ -22,7 +22,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             _listagemDeProdutosEntity = new List<IProduto>
                 {
-                    new DAL.Models.Produto { Nome = "TDD desenvolvimento guiado por testes", Autor = "Kent Beck", Editora = "Bookman", Ano = 2010, Categoria = "Engenharia de Software", Estoque = 0, Preco = 50.0, Foto = "" }
+                    new DAL.Models.Produto { Nome = "TDD desenvolvimento guiado por testes", Autor = "Kent Beck", Editora = "Bookman", Ano = 2010, Categoria = "Engenharia de Software", Estoque = 0, Preco = 50.0M, Foto = "" }
                 };
 
             _repository = new Mock<IProdutoRepository>();

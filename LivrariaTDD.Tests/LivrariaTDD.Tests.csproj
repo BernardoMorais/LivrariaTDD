@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
@@ -47,6 +51,10 @@
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -115,9 +123,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\CommonTest.cs" />
+    <Compile Include="Common\ValueInjecterTest.cs" />
     <Compile Include="Home\HomeControllerTest.cs" />
     <Compile Include="ListagemDeProdutos\ListagemDeProdutosBusinessTest.cs" />
     <Compile Include="ListagemDeProdutos\ListagemDeProdutosControllerTest.cs" />
+    <Compile Include="ListagemDeProdutos\ListagemDeProdutosRepositoryTest.cs" />
+    <Compile Include="Login\UsuarioBusinessTest.cs" />
+    <Compile Include="Login\UsuarioControllerTest.cs" />
+    <Compile Include="Login\UsuarioRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="LivrariaTDDContext.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="LivrariaTDDContextTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="LivrariaTDDContext" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="LivrariaTDDContextContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Produtoes" EntityType="LivrariaTDDContext.Produto" />
+          <EntitySet Name="Usuarios" EntityType="LivrariaTDDContext.Usuario" />
+          <EntitySet Name="Pedidoes" EntityType="LivrariaTDDContext.Pedido" />
+          <EntitySet Name="FormaDePagamentoes" EntityType="LivrariaTDDContext.FormaDePagamento" />
+          <AssociationSet Name="UsuarioPedido" Association="LivrariaTDDContext.UsuarioPedido">
+            <End Role="Usuario" EntitySet="Usuarios" />
+            <End Role="Pedido" EntitySet="Pedidoes" />
+          </AssociationSet>
+          <AssociationSet Name="FormaDePagamentoPedido" Association="LivrariaTDDContext.FormaDePagamentoPedido">
+            <End Role="FormaDePagamento" EntitySet="FormaDePagamentoes" />
+            <End Role="Pedido" EntitySet="Pedidoes" />
+          </AssociationSet>
+          <AssociationSet Name="PedidoProtudo" Association="LivrariaTDDContext.PedidoProtudo">
+            <End Role="Pedido" EntitySet="Pedidoes" />
+            <End Role="Protudo" EntitySet="Produtoes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Produto">
+          <Key>
+            <PropertyRef Name="IdPrduto" />
+          </Key>
+          <Property Type="Int32" Name="IdPrduto" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Pedidos" Relationship="LivrariaTDDContext.PedidoProtudo" FromRole="Protudo" ToRole="Pedido" />
+          <Property Type="String" Name="Nome" Nullable="false" />
+          <Property Type="String" Name="Autor" Nullable="false" />
+          <Property Type="String" Name="Editora" Nullable="false" />
+          <Property Type="Int32" Name="Ano" Nullable="false" />
+          <Property Type="String" Name="Categoria" Nullable="false" />
+          <Property Type="Int32" Name="Estoque" Nullable="false" />
+          <Property Type="Decimal" Name="Preco" Nullable="false" />
+          <Property Type="String" Name="Foto" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Type="Int32" Name="IdUsuario" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Pedidos" Relationship="LivrariaTDDContext.UsuarioPedido" FromRole="Usuario" ToRole="Pedido" />
+          <Property Type="String" Name="Nome" Nullable="false" />
+          <Property Type="String" Name="Rua" Nullable="false" />
+          <Property Type="Int32" Name="Numero" Nullable="false" />
+          <Property Type="String" Name="Bairro" Nullable="false" />
+          <Property Type="String" Name="Cidade" Nullable="false" />
+          <Property Type="String" Name="Estado" Nullable="false" />
+          <Property Type="Int32" Name="CEP" Nullable="false" />
+          <Property Type="String" Name="Telefone" Nullable="false" />
+          <Property Type="String" Name="Celular" Nullable="false" />
+          <Property Type="String" Name="Senha" Nullable="false" />
+          <Property Type="String" Name="TipoUsuario" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pedido">
+          <Key>
+            <PropertyRef Name="IdPedido" />
+          </Key>
+          <Property Type="Int32" Name="IdPedido" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Usuario" Relationship="LivrariaTDDContext.UsuarioPedido" FromRole="Pedido" ToRole="Usuario" />
+          <NavigationProperty Name="FormaDePagamento" Relationship="LivrariaTDDContext.FormaDePagamentoPedido" FromRole="Pedido" ToRole="FormaDePagamento" />
+          <NavigationProperty Name="Produtos" Relationship="LivrariaTDDContext.PedidoProtudo" FromRole="Pedido" ToRole="Protudo" />
+          <Property Type="Decimal" Name="ValorCompra" Nullable="false" />
+          <Property Type="Decimal" Name="ValorFrete" Nullable="false" />
+          <Property Type="Decimal" Name="ValorTotal" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FormaDePagamento">
+          <Key>
+            <PropertyRef Name="IdFormaDePagamento" />
+          </Key>
+          <Property Type="Int32" Name="IdFormaDePagamento" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Pedidos" Relationship="LivrariaTDDContext.FormaDePagamentoPedido" FromRole="FormaDePagamento" ToRole="Pedido" />
+          <Property Type="String" Name="NomeFormaDePagamento" Nullable="false" />
+          <Property Type="String" Name="Icone" Nullable="false" />
+        </EntityType>
+        <Association Name="UsuarioPedido">
+          <End Type="LivrariaTDDContext.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="LivrariaTDDContext.Pedido" Role="Pedido" Multiplicity="*" />
+        </Association>
+        <Association Name="FormaDePagamentoPedido">
+          <End Type="LivrariaTDDContext.FormaDePagamento" Role="FormaDePagamento" Multiplicity="1" />
+          <End Type="LivrariaTDDContext.Pedido" Role="Pedido" Multiplicity="*" />
+        </Association>
+        <Association Name="PedidoProtudo">
+          <End Type="LivrariaTDDContext.Pedido" Role="Pedido" Multiplicity="*" />
+          <End Type="LivrariaTDDContext.Produto" Role="Protudo" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="LivrariaTDDContext" />
+        <Alias Key="Target" Value="LivrariaTDDContext.Store" />
+        <EntityContainerMapping CdmEntityContainer="LivrariaTDDContextContainer" StorageEntityContainer="LivrariaTDDContextTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

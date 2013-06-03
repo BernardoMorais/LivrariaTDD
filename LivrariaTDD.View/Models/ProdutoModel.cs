@@ -16,7 +16,7 @@ namespace LivrariaTDD.Models
 
         public int Estoque { get; set; }
 
-        public double Preco { get; set; }
+        public decimal Preco { get; set; }
 
         public string Foto { get; set; }
     }

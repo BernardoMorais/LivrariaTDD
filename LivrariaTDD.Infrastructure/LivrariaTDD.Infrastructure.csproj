@@ -41,11 +41,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BRL\IListagemDeProdutosBusiness.cs" />
+    <Compile Include="BRL\IUsuarioBusiness.cs" />
+    <Compile Include="DAL\Context\ILivrariaTDDContext.cs" />
     <Compile Include="DAL\Repository\IProdutoRepository.cs" />
-    <Compile Include="Models\Produto.cs" />
+    <Compile Include="DAL\Repository\IUsuarioRepository.cs" />
+    <Compile Include="Helpers\Helpers.cs" />
+    <Compile Include="Models\IFormaDePagamento.cs" />
+    <Compile Include="Models\IPedido.cs" />
+    <Compile Include="Models\IProduto.cs" />
+    <Compile Include="Models\IUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Controllers\IHomeController.cs" />
     <Compile Include="View\Controllers\IListagemDeProdutosController.cs" />
+    <Compile Include="View\Controllers\IUsuarioController.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
