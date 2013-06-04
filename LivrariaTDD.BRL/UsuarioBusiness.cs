@@ -18,5 +18,13 @@ namespace LivrariaTDD.BRL
 
             return usuario != null && usuario.Senha == senha;
         }
+
+        public string VerificarTipoUsuario(string email)
+        {
+            var usuario = _repository.RecuperarUsuario(email);
+            if(usuario != null)
+                return usuario.TipoUsuario;
+            return "";
+        }
     }
 }

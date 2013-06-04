@@ -127,6 +127,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ListagemDeProdutosController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
+    <Compile Include="Controllers\VisualizarLivroController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -134,8 +135,6 @@
     <Compile Include="Module\BRLModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ProdutoModel.cs" />
-    <Compile Include="Security\LivrariaTDDMembershipProvider.cs" />
-    <Compile Include="Security\LivrariaTDDRoleProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -155,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

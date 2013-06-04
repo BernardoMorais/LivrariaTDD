@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="BRL\IListagemDeProdutosBusiness.cs" />
     <Compile Include="BRL\IUsuarioBusiness.cs" />
+    <Compile Include="BRL\IVisualizarLivroBusiness.cs" />
     <Compile Include="DAL\Context\ILivrariaTDDContext.cs" />
     <Compile Include="DAL\Repository\IProdutoRepository.cs" />
     <Compile Include="DAL\Repository\IUsuarioRepository.cs" />

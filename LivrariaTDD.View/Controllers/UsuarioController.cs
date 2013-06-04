@@ -20,7 +20,7 @@ namespace LivrariaTDD.Controllers
         {
             if (_business.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha)))
             {
-                return RedirectToAction("Index", "ListagemDeProdutos", new { logado = true, tipoUsuario = "Funcionario", erroLogin = "" });
+                return RedirectToAction("Index", "ListagemDeProdutos", new { logado = true, tipoUsuario = _business.VerificarTipoUsuario(usuario.Email), erroLogin = "" });
             }
             return RedirectToAction("Index", "ListagemDeProdutos", new { logado = false, tipoUsuario = "", erroLogin = "Dados do usuário inválidos." });
         }

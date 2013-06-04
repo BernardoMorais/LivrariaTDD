@@ -6,5 +6,7 @@ namespace LivrariaTDD.Infrastructure.DAL.Repository
     public interface IProdutoRepository
     {
         List<IProduto> RecuperarTodosProdutos();
+
+        IProduto RecuperarInformacoesDoLivro(int id);
     }
 }

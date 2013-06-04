@@ -5,6 +5,7 @@ using LivrariaTDD.Infrastructure.BRL;
 using LivrariaTDD.Infrastructure.View.Controllers;
 using LivrariaTDD.Models;
 using Omu.ValueInjecter;
+using System.Linq;
 
 namespace LivrariaTDD.Controllers
 {
@@ -21,6 +22,21 @@ namespace LivrariaTDD.Controllers
         {
             try
             {
+                if (ViewData.ContainsKey("logado"))
+                    ViewData["logado"] = "";
+                else
+                    ViewData.Add("logado", "");
+
+                if (ViewData.ContainsKey("tipoUsuario"))
+                    ViewData["tipoUsuario"] = "";
+                else
+                    ViewData.Add("tipoUsuario", "");
+
+                if (ViewData.ContainsKey("erroLogin"))
+                    ViewData["erroLogin"] = "";
+                else
+                    ViewData.Add("erroLogin", "");
+
                 if (ViewData.ContainsKey("ListagemDeProdutos"))
                     ViewData["ListagemDeProdutos"] = CarregaListaDeProdutos();
                 else
@@ -85,6 +101,43 @@ namespace LivrariaTDD.Controllers
             }
 
             return novaListagemDeProdutos;
+        }
+
+        public ViewResult PesquisaProduto(string nome, string categoria)
+        {
+            if (ViewData.ContainsKey("logado"))
+                ViewData["logado"] = ViewData["logado"];
+            else
+                ViewData.Add("logado", "");
+
+            if (ViewData.ContainsKey("tipoUsuario"))
+                ViewData["tipoUsuario"] = ViewData["tipoUsuario"];
+            else
+                ViewData.Add("tipoUsuario", "");
+
+            if (ViewData.ContainsKey("erroLogin"))
+                ViewData["erroLogin"] = ViewData["erroLogin"];
+            else
+                ViewData.Add("erroLogin", "");
+
+            if (ViewData.ContainsKey("ListagemDeProdutos"))
+            {
+                if (ViewData["ListagemDeProdutos"] == null)
+                {
+                    ViewData["ListagemDeProdutos"] = CarregaListaDeProdutos();
+                }
+            }
+            else
+                ViewData.Add("ListagemDeProdutos", CarregaListaDeProdutos());
+
+            var lista = (List<ProdutoModel>)ViewData["ListagemDeProdutos"];
+
+            if(!String.IsNullOrEmpty(nome) && !String.IsNullOrEmpty(categoria))
+                ViewData["ListagemDeProdutos"] = lista.Where(x => (String.IsNullOrEmpty(nome) && String.IsNullOrEmpty(categoria)) || ((!String.IsNullOrEmpty(nome) && x.Nome.Contains(nome)) && (!String.IsNullOrEmpty(categoria) && x.Categoria.Contains(categoria)))).ToList();
+            else
+                ViewData["ListagemDeProdutos"] = lista.Where(x => (String.IsNullOrEmpty(nome) && String.IsNullOrEmpty(categoria)) || ((!String.IsNullOrEmpty(nome) && x.Nome.Contains(nome)) || (!String.IsNullOrEmpty(categoria) && x.Categoria.Contains(categoria)))).ToList();
+
+            return View("ListagemDeProdutos");
         }
     }
 }

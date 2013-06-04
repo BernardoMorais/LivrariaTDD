@@ -16,10 +16,12 @@ namespace LivrariaTDD.MVCTests.Common
             var homeController = new HomeController();
             var listagemDeProdutosController = new ListagemDeProdutosController(new Mock<IListagemDeProdutosBusiness>().Object);
             var usuarioController = new UsuarioController(new Mock<IUsuarioBusiness>().Object);
+            var visualizarLivroController = new VisualizarLivroController(new Mock<IVisualizarLivroBusiness>().Object);
 
             Assert.IsInstanceOf(typeof(Controller), homeController);
             Assert.IsInstanceOf(typeof(Controller), listagemDeProdutosController);
             Assert.IsInstanceOf(typeof(Controller), usuarioController);
+            Assert.IsInstanceOf(typeof(Controller), visualizarLivroController);
         }
     }
 }

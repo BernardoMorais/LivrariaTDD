@@ -132,6 +132,9 @@
     <Compile Include="Login\UsuarioControllerTest.cs" />
     <Compile Include="Login\UsuarioRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VisualizarLivro\VisualizarLivroBusinessTest.cs" />
+    <Compile Include="VisualizarLivro\VisualizarLivroControllerTest.cs" />
+    <Compile Include="VisualizarLivro\VisualizarLivroRepositoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

@@ -42,6 +42,7 @@
     <Compile Include="ListagemDeProdutosBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsuarioBusiness.cs" />
+    <Compile Include="VisualizarLivroBusiness.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LivrariaTDD.DAL\LivrariaTDD.DAL.csproj">

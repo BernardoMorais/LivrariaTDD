@@ -19,5 +19,7 @@ namespace LivrariaTDD.Models
         public decimal Preco { get; set; }
 
         public string Foto { get; set; }
+
+        public int IdPrduto { get; set; }
     }
 }

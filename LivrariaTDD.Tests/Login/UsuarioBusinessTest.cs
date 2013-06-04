@@ -78,5 +78,37 @@ namespace LivrariaTDD.MVCTests.Login
 
             Assert.IsFalse(result);
         }
+
+        [Test]
+        public void ACadamadaDeNegociosDeveRecuperarUmUsuarioAtravesDoEmail_DeveRetornarOTipoDoUsuario()
+        {
+            const string email = "funcionario@email.com";
+
+            var mockContext = new Mock<IUsuarioRepository>();
+
+            mockContext.Setup(x => x.RecuperarUsuario(email)).Returns(_usuario);
+
+            _business = new UsuarioBusiness(mockContext.Object);
+
+            var result = _business.VerificarTipoUsuario(email);
+
+            StringAssert.AreEqualIgnoringCase(result, "funcionario");
+        }
+
+        [Test]
+        public void ACadamadaDeNegociosDeveNaoRecuperarUmUsuario_DeveRetornarTipoVazio()
+        {
+            const string email = "funcionario@email.com";
+
+            var mockContext = new Mock<IUsuarioRepository>();
+
+            mockContext.Setup(x => x.RecuperarUsuario(email)).Returns((IUsuario) null);
+
+            _business = new UsuarioBusiness(mockContext.Object);
+
+            var result = _business.VerificarTipoUsuario(email);
+
+            StringAssert.AreEqualIgnoringCase(result, "");
+        }
     }
 }

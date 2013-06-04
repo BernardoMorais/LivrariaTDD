@@ -21,5 +21,12 @@ namespace LivrariaTDD.DAL.Repositories
 
             return query.ToList();
         }
+
+        public IProduto RecuperarInformacoesDoLivro(int id)
+        {
+            var query = _context.Produtos.Where(x => x.IdPrduto == id);
+
+            return query.FirstOrDefault();
+        }
     }
 }

@@ -79,6 +79,7 @@ namespace LivrariaTDD.MVCTests.Login
 
             var business = new Mock<IUsuarioBusiness>();
             business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.VerificarTipoUsuario(usuario.Email)).Returns("Funcionario");
 
             _controller = new UsuarioController(business.Object);
 
@@ -118,9 +119,57 @@ namespace LivrariaTDD.MVCTests.Login
 
             _controller = new UsuarioController(business.Object);
 
-            var result = _controller.Entrar(usuario);
+            _controller.Entrar(usuario);
 
             business.Verify(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha)), Times.AtLeastOnce());
+        }
+
+        [Test]
+        public void AoSolicitarLoginAoControle_OControleDeveVerficarOTipoDeUsuarioNaCamadaDeNegocios()
+        {
+            var usuario = new UsuarioModel { Email = "cliente@email.com", Senha = "123456" };
+
+            var business = new Mock<IUsuarioBusiness>();
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.VerificarTipoUsuario(usuario.Email)).Returns("Cliente");
+
+            _controller = new UsuarioController(business.Object);
+
+            _controller.Entrar(usuario);
+
+            business.Verify(x => x.VerificarTipoUsuario(usuario.Email), Times.AtLeastOnce());
+        }
+
+        [Test]
+        public void AoSolicitarLoginAoControle_ComoFuncionarioDaLoja_OControleDeveRetornarOTipoCorrepondente()
+        {
+            var usuario = new UsuarioModel { Email = "funcionario@email.com", Senha = "654321" };
+
+            var business = new Mock<IUsuarioBusiness>();
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.VerificarTipoUsuario(usuario.Email)).Returns("Funcionario");
+
+            _controller = new UsuarioController(business.Object);
+
+            var result = _controller.Entrar(usuario);
+
+            StringAssert.AreEqualIgnoringCase("Funcionario", result.RouteValues["tipoUsuario"] as string);
+        }
+
+        [Test]
+        public void AoSolicitarLoginAoControle_ComoFuncionarioCliente_OControleDeveRetornarOTipoCorrepondente()
+        {
+            var usuario = new UsuarioModel { Email = "cliente@email.com", Senha = "123456" };
+
+            var business = new Mock<IUsuarioBusiness>();
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.VerificarTipoUsuario(usuario.Email)).Returns("Cliente");
+
+            _controller = new UsuarioController(business.Object);
+
+            var result = _controller.Entrar(usuario);
+
+            StringAssert.AreEqualIgnoringCase("Cliente", result.RouteValues["tipoUsuario"] as string);
         }
     }
 }
