@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using LivrariaTDD.BRL;
-using LivrariaTDD.Infrastructure.BRL;
+using LivrariaTDD.BRL.Livro;
+using LivrariaTDD.Infrastructure.BRL.Livro;
 using LivrariaTDD.Infrastructure.DAL.Repository;
 using LivrariaTDD.Infrastructure.Models;
 using Moq;
@@ -12,7 +12,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
     [TestFixture]
     public class ListagemDeProdutosBusinessTest
     {
-        private IListagemDeProdutosBusiness _business;
+        private ILivroBusiness _business;
         private Mock<IProdutoRepository> _repository;
         private List<IProduto> _listagemDeProdutosEntity;
 
@@ -27,7 +27,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             _repository = new Mock<IProdutoRepository>();
             _repository.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
-            _business = new ListagemDeProdutosBusiness(_repository.Object);
+            _business = new LivroBusiness(_repository.Object);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
             var repository = new Mock<IProdutoRepository>();
             repository.Setup(x => x.RecuperarTodosProdutos()).Throws<Exception>();
 
-            var business = new ListagemDeProdutosBusiness(repository.Object);
+            var business = new LivroBusiness(repository.Object);
 
             Assert.Throws<Exception>(() => business.RecuperarTodosProdutos());
         }

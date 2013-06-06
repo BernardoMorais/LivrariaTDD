@@ -124,10 +124,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ListagemDeProdutosController.cs" />
-    <Compile Include="Controllers\UsuarioController.cs" />
-    <Compile Include="Controllers\VisualizarLivroController.cs" />
+    <Compile Include="Controllers\Home\HomeController.cs" />
+    <Compile Include="Controllers\Livros\LivroController.Cadastro.cs" />
+    <Compile Include="Controllers\Livros\LivroController.cs" />
+    <Compile Include="Controllers\Livros\LivroController.Listagem.cs" />
+    <Compile Include="Controllers\Usuario\UsuarioController.cs" />
+    <Compile Include="Controllers\Livros\LivroController.Visualizar.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

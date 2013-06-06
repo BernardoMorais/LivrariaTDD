@@ -5,7 +5,7 @@ namespace LivrariaTDD.DAL.Models
 {
     public class Produto : IProduto
     {
-        public int IdPrduto { get; set; }
+        public int IdProduto { get; set; }
         public string Nome { get; set; }
         public string Autor { get; set; }
         public string Editora { get; set; }

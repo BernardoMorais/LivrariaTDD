@@ -20,6 +20,6 @@ namespace LivrariaTDD.Models
 
         public string Foto { get; set; }
 
-        public int IdPrduto { get; set; }
+        public int IdProduto { get; set; }
     }
 }

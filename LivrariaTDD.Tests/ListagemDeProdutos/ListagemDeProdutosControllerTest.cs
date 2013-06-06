@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using LivrariaTDD.Controllers;
-using LivrariaTDD.Infrastructure.BRL;
+using LivrariaTDD.Controllers.Livros;
+using LivrariaTDD.Infrastructure.BRL.Livro;
 using LivrariaTDD.Infrastructure.Models;
 using LivrariaTDD.Models;
 using Moq;
@@ -11,10 +11,10 @@ using NUnit.Framework;
 namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 {
     [TestFixture]
-    public class ListagemDeProdutosControllerTest
+    public class LivroControllerTest
     {
-        private ListagemDeProdutosController _controller;
-        private Mock<IListagemDeProdutosBusiness> _business;        
+        private LivroController _controller;
+        private Mock<ILivroBusiness> _business;        
         private List<IProduto> _listagemDeProdutosEntity;
         private DAL.Models.Produto _livroTDD;
         private DAL.Models.Produto _livroRomance;
@@ -25,7 +25,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         {
             _livroTDD = new DAL.Models.Produto
                 {
-                    IdPrduto = 1,
+                    IdProduto = 1,
                     Nome = "TDD desenvolvimento guiado por testes",
                     Autor = "Kent Beck",
                     Editora = "Bookman",
@@ -38,7 +38,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             _livroRomance = new DAL.Models.Produto
             {
-                IdPrduto = 2,
+                IdProduto = 2,
                 Nome = "O Amor",
                 Autor = "Escritora Romance",
                 Editora = "Bookman",
@@ -51,7 +51,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             _livroFiccao = new DAL.Models.Produto
             {
-                IdPrduto = 3,
+                IdProduto = 3,
                 Nome = "O Senhor Dos Aneis",
                 Autor = "Tolken J.R.",
                 Editora = "Abril",
@@ -69,9 +69,9 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
 
 
-            _business = new Mock<IListagemDeProdutosBusiness>();
+            _business = new Mock<ILivroBusiness>();
             _business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
         }
 
         #region US1
@@ -215,10 +215,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemVirDaCamadaDeNegocios()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             _controller.Index();
 
@@ -228,10 +228,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemEOcorrerUmaExcecaoNaCamadaDeNegocios_ComoFuncionarioDaLoja_OSistemaDeveNotificarAoUsuario()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Throws<Exception>();
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             var result = _controller.Index();
 
@@ -250,6 +250,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoCliente_DeveRetornarOTipoDeUsuarioParaPagina()
         {
+            _controller = new LivroController(_business.Object);
             var result = _controller.Index(true, "Cliente", "");
             Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);        
             StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "Cliente");
@@ -258,6 +259,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoCliente_DeveRetornarQueExisteUsuarioLogado()
         {
+            _controller = new LivroController(_business.Object);
             var result = _controller.Index(true, "Cliente", "");
             Assert.Contains("logado", result.ViewData.Keys as ICollection);
             Assert.True((bool)result.ViewData["logado"]);
@@ -266,6 +268,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoCliente_NaoDeveRetornarErroNaPagina()
         {
+            _controller = new LivroController(_business.Object);
             var result = _controller.Index(true, "Cliente", "");
             Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
             StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "");
@@ -282,6 +285,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoCliente_DeveRetornarQueNaoExisteUsuarioLogado()
         {
+            _controller = new LivroController(_business.Object);
             var result = _controller.Index(false, "", "Dados do usuário inválidos.");
             Assert.Contains("logado", result.ViewData.Keys as ICollection);
             Assert.False((bool)result.ViewData["logado"]);
@@ -290,6 +294,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoCliente_DeveRetornarUmErroParaPagina()
         {
+            _controller = new LivroController(_business.Object);
             var result = _controller.Index(false, "", "Dados do usuário inválidos.");
             Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
             StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "Dados do usuário inválidos.");
@@ -298,7 +303,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void QuandoAcessoAPaginaLogado_ComoCliente_APaginaEstaAcessivel()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -308,7 +313,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoCliente_APaginaDevePossuirAListagemDeProdutos()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -319,7 +324,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirNome()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -338,7 +343,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirAutor()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -357,7 +362,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirEditora()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -376,7 +381,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirAnoEDeveSerMaiorDoQueZero()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -395,7 +400,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirCategoria()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -414,7 +419,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirEstoqueENaoDeveSerNegativo()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -433,7 +438,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirPrecoEDeveSerMaiorDoQueZero()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -452,10 +457,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemVirDaCamadaDeNegocios()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             _controller.Index(true, "Cliente", "");
 
@@ -465,10 +470,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemEOcorrerUmaExcecaoNaCamadaDeNegociosLogado_ComoCliente_OSistemaDeveNotificarAoUsuario()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Throws<Exception>();
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             var result = _controller.Index(true, "Cliente", "");
 
@@ -487,6 +492,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoFuncionarioDaLoja_DeveRetornarOTipoDeUsuarioParaPagina()
         {
+            _controller = new LivroController(_business.Object);
             var result = _controller.Index(true, "Funcionario", "");
             Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);
             StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "Funcionario");
@@ -495,6 +501,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoFuncionarioDaLoja_DeveRetornarQueExisteUsuarioLogado()
         {
+            _controller = new LivroController(_business.Object);
             var result = _controller.Index(true, "Funcionario", "");
             Assert.Contains("logado", result.ViewData.Keys as ICollection);
             Assert.True((bool)result.ViewData["logado"]);
@@ -503,6 +510,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoFuncionarioDaLoja_NaoDeveRetornarErroNaPagina()
         {
+            _controller = new LivroController(_business.Object);
             var result = _controller.Index(true, "Funcionario", "");
             Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
             StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "");
@@ -535,7 +543,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void QuandoAcessoAPaginaLogado_ComoFuncionarioDaLoja_APaginaEstaAcessivel()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -545,7 +553,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_APaginaDevePossuirAListagemDeProdutos()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -556,7 +564,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirNome()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -575,7 +583,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirAutor()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -594,7 +602,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirEditora()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -613,7 +621,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirAnoEDeveSerMaiorDoQueZero()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -632,7 +640,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirCategoria()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -651,7 +659,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirEstoqueENaoDeveSerNegativo()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -670,7 +678,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirPrecoEDeveSerMaiorDoQueZero()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -689,10 +697,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemVirDaCamadaDeNegocios()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             _controller.Index(true, "Funcionario", "");
 
@@ -702,10 +710,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemEOcorrerUmaExcecaoNaCamadaDeNegociosLogado_ComoFuncionarioDaLoja_OSistemaDeveNotificarAoUsuario()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Throws<Exception>();
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             var result = _controller.Index(true, "Funcionario", "");
 
@@ -728,10 +736,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void QuandoUsuarioFiltarAListaPeloNome_OControleDeveRetornarSomenteOsLivrosComNomesCorrepondentes()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             var result = _controller.PesquisaProduto("TDD", "");
 
@@ -746,10 +754,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void QuandoUsuarioFiltarAListaPelaCategoria_OControleDeveRetornarSomenteOsLivrosComCategoriasCorrepondentes()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             var result = _controller.PesquisaProduto("", "Ficção");
 
@@ -765,10 +773,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void QuandoUsuarioFiltarAListaPeloNomeECategoria_OControleDeveRetornarSomenteOsLivrosComNomesECategoriaCorrepondentes()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             var result = _controller.PesquisaProduto("Aneis","Ficção");
 
@@ -783,10 +791,10 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void QuandoUsuarioFiltarAListaComParametrosVazio_OControleDeveRetornarTodosOsLivros()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             var result = _controller.PesquisaProduto("", "");
 
@@ -803,14 +811,12 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void QuandoUsuarioFiltarAListaPeloNome_OControleDeveManterOsDadosDoUsuario()
         {
-            var business = new Mock<IListagemDeProdutosBusiness>();
+            var business = new Mock<ILivroBusiness>();
             business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new ListagemDeProdutosController(business.Object);
+            _controller = new LivroController(business.Object);
 
             var result = _controller.PesquisaProduto("TDD", "");
-
-            var lista = (List<ProdutoModel>)result.ViewData["ListagemDeProdutos"];
 
             Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
             Assert.Contains("logado", result.ViewData.Keys as ICollection);
@@ -825,7 +831,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutos_OsProdutosDevemPossuirIdENaoDeveSerNegativo()
         {
-            _controller = new ListagemDeProdutosController(_business.Object);
+            _controller = new LivroController(_business.Object);
 
             var result = _controller.Index();
 
@@ -837,7 +843,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsTrue(produto.IdPrduto >= 0);
+                Assert.IsTrue(produto.IdProduto >= 0);
             }
         }
 

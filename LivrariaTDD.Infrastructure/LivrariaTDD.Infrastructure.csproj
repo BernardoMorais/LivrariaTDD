@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -40,9 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BRL\IListagemDeProdutosBusiness.cs" />
-    <Compile Include="BRL\IUsuarioBusiness.cs" />
-    <Compile Include="BRL\IVisualizarLivroBusiness.cs" />
+    <Compile Include="BRL\Livro\ILivroBusiness.Cadastro.cs" />
+    <Compile Include="BRL\Livro\ILivroBusiness.Listagem.cs" />
+    <Compile Include="BRL\Usuario\IUsuarioBusiness.cs" />
+    <Compile Include="BRL\Livro\ILivroBusiness.Visualizar.cs" />
     <Compile Include="DAL\Context\ILivrariaTDDContext.cs" />
     <Compile Include="DAL\Repository\IProdutoRepository.cs" />
     <Compile Include="DAL\Repository\IUsuarioRepository.cs" />

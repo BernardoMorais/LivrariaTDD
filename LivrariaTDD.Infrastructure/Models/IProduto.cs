@@ -4,7 +4,7 @@ namespace LivrariaTDD.Infrastructure.Models
 {
     public interface IProduto
     {
-        int IdPrduto { get; set; }
+        int IdProduto { get; set; }
         string Nome { get; set; }
         string Autor { get; set; }
         string Editora { get; set; }

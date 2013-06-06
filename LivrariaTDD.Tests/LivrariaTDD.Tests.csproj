@@ -122,6 +122,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CadastrarLivro\CadastrarLivroBusinessTest.cs" />
+    <Compile Include="CadastrarLivro\CadastrarLivroControllerTest.cs" />
+    <Compile Include="CadastrarLivro\CadastrarLivroRepositoryTest.cs" />
     <Compile Include="Common\CommonTest.cs" />
     <Compile Include="Common\ValueInjecterTest.cs" />
     <Compile Include="Home\HomeControllerTest.cs" />

@@ -25,7 +25,7 @@ namespace LivrariaTDD.MVCTests.Home
 
             //var result = controller.Object.Index() as RedirectToRouteResult;
 
-            //Assert.Contains("ListagemDeProdutosController",result.RouteValues.Values);
+            //Assert.Contains("LivroController",result.RouteValues.Values);
 
             //Assert.Contains("Index", result.RouteValues.Values);
             #endregion

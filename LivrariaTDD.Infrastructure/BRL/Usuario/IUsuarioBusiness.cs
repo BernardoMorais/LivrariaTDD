@@ -1,4 +1,4 @@
-namespace LivrariaTDD.Infrastructure.BRL
+namespace LivrariaTDD.Infrastructure.BRL.Usuario
 {
     public interface IUsuarioBusiness
     {

@@ -1,5 +1,5 @@
-﻿using LivrariaTDD.Controllers;
-using LivrariaTDD.Infrastructure.BRL;
+﻿using LivrariaTDD.Controllers.Usuario;
+using LivrariaTDD.Infrastructure.BRL.Usuario;
 using LivrariaTDD.Infrastructure.Helpers;
 using LivrariaTDD.Models;
 using Moq;
@@ -22,7 +22,7 @@ namespace LivrariaTDD.MVCTests.Login
         [Test]
         public void AoControleEnviarOsDadosDoUsuario_ComoFuncionarioDaLoja_ASenhaDeveSerCriptografadaComOProtocoloSHA1()
         {
-            StringAssert.AreEqualIgnoringCase(SenhaCriptografada, Helpers.ConvertoToSHA1(SenhaNaoCriptografada));
+            StringAssert.AreEqualIgnoringCase(SenhaCriptografada, Helpers.ConvertToSHA1(SenhaNaoCriptografada));
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace LivrariaTDD.MVCTests.Login
             var usuario = new UsuarioModel { Email = "funcionario@email.com", Senha = "654321" };
 
             var business = new Mock<IUsuarioBusiness>();
-            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha))).Returns(true);
 
             _controller = new UsuarioController(business.Object);
 
@@ -46,7 +46,7 @@ namespace LivrariaTDD.MVCTests.Login
             var usuario = new UsuarioModel { Email = "funcionario@email.com", Senha = "senhaErrada" };
 
             var business = new Mock<IUsuarioBusiness>();
-            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(false);
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha))).Returns(false);
 
             _controller = new UsuarioController(business.Object);
 
@@ -61,7 +61,7 @@ namespace LivrariaTDD.MVCTests.Login
             var usuario = new UsuarioModel { Email = "funcionario@email.com", Senha = "654321" };
 
             var business = new Mock<IUsuarioBusiness>();
-            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha))).Returns(true);
 
             _controller = new UsuarioController(business.Object);
 
@@ -78,7 +78,7 @@ namespace LivrariaTDD.MVCTests.Login
             var usuario = new UsuarioModel { Email = "funcionario@email.com", Senha = "654321" };
 
             var business = new Mock<IUsuarioBusiness>();
-            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha))).Returns(true);
             business.Setup(x => x.VerificarTipoUsuario(usuario.Email)).Returns("Funcionario");
 
             _controller = new UsuarioController(business.Object);
@@ -97,7 +97,7 @@ namespace LivrariaTDD.MVCTests.Login
             var usuario = new UsuarioModel { Email = "funcionario@email.com", Senha = "senhaErrada" };
 
             var business = new Mock<IUsuarioBusiness>();
-            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(false);
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha))).Returns(false);
 
             _controller = new UsuarioController(business.Object);
 
@@ -115,13 +115,13 @@ namespace LivrariaTDD.MVCTests.Login
             var usuario = new UsuarioModel { Email = "funcionario@email.com", Senha = "654321" };
 
             var business = new Mock<IUsuarioBusiness>();
-            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha))).Returns(true);
 
             _controller = new UsuarioController(business.Object);
 
             _controller.Entrar(usuario);
 
-            business.Verify(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha)), Times.AtLeastOnce());
+            business.Verify(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha)), Times.AtLeastOnce());
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace LivrariaTDD.MVCTests.Login
             var usuario = new UsuarioModel { Email = "cliente@email.com", Senha = "123456" };
 
             var business = new Mock<IUsuarioBusiness>();
-            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha))).Returns(true);
             business.Setup(x => x.VerificarTipoUsuario(usuario.Email)).Returns("Cliente");
 
             _controller = new UsuarioController(business.Object);
@@ -146,7 +146,7 @@ namespace LivrariaTDD.MVCTests.Login
             var usuario = new UsuarioModel { Email = "funcionario@email.com", Senha = "654321" };
 
             var business = new Mock<IUsuarioBusiness>();
-            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha))).Returns(true);
             business.Setup(x => x.VerificarTipoUsuario(usuario.Email)).Returns("Funcionario");
 
             _controller = new UsuarioController(business.Object);
@@ -162,7 +162,7 @@ namespace LivrariaTDD.MVCTests.Login
             var usuario = new UsuarioModel { Email = "cliente@email.com", Senha = "123456" };
 
             var business = new Mock<IUsuarioBusiness>();
-            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha))).Returns(true);
+            business.Setup(x => x.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha))).Returns(true);
             business.Setup(x => x.VerificarTipoUsuario(usuario.Email)).Returns("Cliente");
 
             _controller = new UsuarioController(business.Object);

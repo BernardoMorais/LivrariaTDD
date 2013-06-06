@@ -1,11 +1,11 @@
-using LivrariaTDD.Infrastructure.BRL;
+using LivrariaTDD.Infrastructure.BRL.Usuario;
 using LivrariaTDD.Infrastructure.DAL.Repository;
 
-namespace LivrariaTDD.BRL
+namespace LivrariaTDD.BRL.Usuario
 {
     public class UsuarioBusiness : IUsuarioBusiness
     {
-        private IUsuarioRepository _repository;
+        private readonly IUsuarioRepository _repository;
 
         public UsuarioBusiness(IUsuarioRepository usuarioRepository)
         {

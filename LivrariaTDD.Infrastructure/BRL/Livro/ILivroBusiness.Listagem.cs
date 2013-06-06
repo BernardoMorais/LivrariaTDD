@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using LivrariaTDD.Infrastructure.Models;
 
-namespace LivrariaTDD.Infrastructure.BRL
+namespace LivrariaTDD.Infrastructure.BRL.Livro
 {
-    public interface IListagemDeProdutosBusiness
+    public partial interface ILivroBusiness
     {
         List<IProduto> RecuperarTodosProdutos();
     }

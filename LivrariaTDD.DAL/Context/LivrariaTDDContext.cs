@@ -12,14 +12,39 @@ namespace LivrariaTDD.DAL.Context
 {
     public class LivrariaTDDContext : DbContext, ILivrariaTDDContext
     {
-        public DbSet<Usuario> Usuarios;
-        public DbSet<Produto> Produtos;
-        public DbSet<Pedido> Pedidos;
-        public DbSet<FormaDePagamento> FormasDePagamento;
+        public DbSet<IUsuario> Usuarios;
+        public DbSet<IProduto> Produtos;
+        public DbSet<IPedido> Pedidos;
+        public DbSet<IFormaDePagamento> FormasDePagamento;
 
         IQueryable<IUsuario> ILivrariaTDDContext.Usuarios { get { return Usuarios; } }
         IQueryable<IProduto> ILivrariaTDDContext.Produtos { get { return Produtos; } }
         IQueryable<IPedido> ILivrariaTDDContext.Pedidos { get { return Pedidos; } }
         IQueryable<IFormaDePagamento> ILivrariaTDDContext.FormasDePagamento { get { return FormasDePagamento; } }
+        
+        public new void SaveChanges()
+        {
+            base.SaveChanges();
+        }
+
+        public IDbSet<IUsuario> GetUsuarios()
+        {
+            return Usuarios;
+        }
+
+        public IDbSet<IProduto> GetProdutos()
+        {
+            return Produtos;
+        }
+
+        public IDbSet<IPedido> GetPedidos()
+        {
+            return Pedidos;
+        }
+
+        public IDbSet<IFormaDePagamento> GetFormasDePagamento()
+        {
+            return FormasDePagamento;
+        }
     }
 }

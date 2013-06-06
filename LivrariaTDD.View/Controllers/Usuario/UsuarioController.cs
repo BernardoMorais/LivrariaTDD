@@ -1,15 +1,13 @@
 using System.Web.Mvc;
-using System.Web.Security;
-using LivrariaTDD.Infrastructure.BRL;
+using LivrariaTDD.Infrastructure.BRL.Usuario;
 using LivrariaTDD.Infrastructure.Helpers;
-using LivrariaTDD.Infrastructure.View.Controllers;
 using LivrariaTDD.Models;
 
-namespace LivrariaTDD.Controllers
+namespace LivrariaTDD.Controllers.Usuario
 {
     public class UsuarioController : Controller
     {
-        private IUsuarioBusiness _business;        
+        private readonly IUsuarioBusiness _business;        
 
         public UsuarioController(IUsuarioBusiness business)
         {
@@ -18,7 +16,7 @@ namespace LivrariaTDD.Controllers
 
         public RedirectToRouteResult Entrar(UsuarioModel usuario)
         {
-            if (_business.ValidarUsuario(usuario.Email, Helpers.ConvertoToSHA1(usuario.Senha)))
+            if (_business.ValidarUsuario(usuario.Email, Helpers.ConvertToSHA1(usuario.Senha)))
             {
                 return RedirectToAction("Index", "ListagemDeProdutos", new { logado = true, tipoUsuario = _business.VerificarTipoUsuario(usuario.Email), erroLogin = "" });
             }

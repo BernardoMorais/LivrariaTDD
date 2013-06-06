@@ -1,5 +1,5 @@
-﻿using LivrariaTDD.BRL;
-using LivrariaTDD.Infrastructure.BRL;
+﻿using LivrariaTDD.BRL.Livro;
+using LivrariaTDD.Infrastructure.BRL.Livro;
 
 namespace LivrariaTDD.Module
 {
@@ -7,7 +7,7 @@ namespace LivrariaTDD.Module
     {
         public override void Load()
         {
-            Bind<IListagemDeProdutosBusiness>().To<ListagemDeProdutosBusiness>();
+            Bind<ILivroBusiness>().To<LivroBusiness>();
         }
     }
 }

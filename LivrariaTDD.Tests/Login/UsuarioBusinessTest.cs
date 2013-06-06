@@ -1,5 +1,5 @@
-﻿using LivrariaTDD.BRL;
-using LivrariaTDD.Infrastructure.BRL;
+﻿using LivrariaTDD.BRL.Usuario;
+using LivrariaTDD.Infrastructure.BRL.Usuario;
 using LivrariaTDD.Infrastructure.DAL.Repository;
 using LivrariaTDD.Infrastructure.Models;
 using NUnit.Framework;

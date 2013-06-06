@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Web.Mvc;
 
 namespace LivrariaTDD.Infrastructure.Helpers
 {
     public static class Helpers
     {
-        public static string ConvertoToSHA1(string text)
+        public static string ConvertToSHA1(string text)
         {
             try
             {
@@ -21,6 +22,42 @@ namespace LivrariaTDD.Infrastructure.Helpers
             {
                 return string.Empty;
             }
+        }
+
+        public static void CarregarDadosUsuario(ViewDataDictionary viewData)
+        {
+            if (viewData.ContainsKey("logado"))
+                viewData["logado"] = viewData["logado"];
+            else
+                viewData.Add("logado", false);
+
+            if (viewData.ContainsKey("tipoUsuario"))
+                viewData["tipoUsuario"] = viewData["tipoUsuario"];
+            else
+                viewData.Add("tipoUsuario", "");
+
+            if (viewData.ContainsKey("erroLogin"))
+                viewData["erroLogin"] = viewData["erroLogin"];
+            else
+                viewData.Add("erroLogin", "");
+        }
+
+        public static void CarregarDadosUsuario(ViewDataDictionary viewData, bool logado, string tipoUsuario, string erroLogin)
+        {
+            if (viewData.ContainsKey("logado"))
+                viewData["logado"] = viewData["logado"];
+            else
+                viewData.Add("logado", logado);
+
+            if (viewData.ContainsKey("tipoUsuario"))
+                viewData["tipoUsuario"] = viewData["tipoUsuario"];
+            else
+                viewData.Add("tipoUsuario", tipoUsuario);
+
+            if (viewData.ContainsKey("erroLogin"))
+                viewData["erroLogin"] = viewData["erroLogin"];
+            else
+                viewData.Add("erroLogin", erroLogin);
         }
     }
 }
