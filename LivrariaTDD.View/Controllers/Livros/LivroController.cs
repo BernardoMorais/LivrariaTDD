@@ -1,13 +1,13 @@
 ﻿using System.Web.Mvc;
-using LivrariaTDD.Infrastructure.BRL.Livro;
+using LivrariaTDD.Infrastructure.BRL.Product;
 
 namespace LivrariaTDD.Controllers.Livros
 {
     public partial class LivroController : Controller
     {
-        private readonly ILivroBusiness _business;
+        private readonly IProductBusiness _business;
 
-        public LivroController(ILivroBusiness livroBusiness)
+        public LivroController(IProductBusiness livroBusiness)
         {
             _business = livroBusiness;
         }

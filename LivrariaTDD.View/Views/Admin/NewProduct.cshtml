@@ -1,0 +1,155 @@
+﻿@model LivrariaTDD.Models.Product.Product
+@using LivrariaTDD.Infrastructure.Enums
+@{
+    ViewBag.Title = "Novo Produto";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<div id="maincontainer">
+  <section id="product">
+    <div class="container">
+     <!--  breadcrumb --> 
+      @*<ul class="breadcrumb">
+        <li>
+          <a href="#">Home</a>
+          <span class="divider">/</span>
+        </li>
+        <li class="active">Register Account</li>
+      </ul>*@
+      <div class="row">        
+        <!-- Register Account-->
+        <div class="span9">
+            <h1 class="heading1"><span class="maintext">Cadastro de Produtos</span>@*<span class="subtext">Register Your details with us</span>*@</h1>
+            @using (Html.BeginForm("NewProduct", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                    @Html.HiddenFor(x => x.ProductId)
+                    <h3 class="heading3">Livro</h3>
+                    <div class="registerbox">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label"><span class="red">*</span> Nome:</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.Name, new { @class = "input-xlarge"})
+                                    @Html.ValidationMessageFor(x => x.Name)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"><span class="red">*</span> Autor:</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.Author, new { @class = "input-xlarge"})
+                                    @Html.ValidationMessageFor(x => x.Author)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"><span class="red">*</span> Editora:</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.Publishing, new { @class = "input-xlarge"})
+                                    @Html.ValidationMessageFor(x => x.Publishing)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"><span class="red">*</span> Ano:</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.Year, new { @class = "input-xlarge"})
+                                    @Html.ValidationMessageFor(x => x.Year)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"><span class="red">*</span> Categoria:</label>
+                                <div class="controls">
+                                    @{
+                                        var categoriesList = (from object category in Enum.GetValues(typeof (Categories)) select category.ToString() into categoryName select new SelectListItem {Selected = false, Text = categoryName, Value = categoryName}).ToList();
+                                    }
+                                    @Html.DropDownListFor(x => x.Category, categoriesList, new { @class="input-xlarge"})
+                                    @Html.ValidationMessageFor(x => x.Category)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"><span class="red">*</span> Estoque:</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.Stock, new { @class = "input-xlarge"})
+                                    @Html.ValidationMessageFor(x => x.Stock)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"><span class="red">*</span> Preço:</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.Price, new { @class = "input-xlarge"})
+                                    @Html.ValidationMessageFor(x => x.Price)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"> Preço Antigo:</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.PriceOld, new { @class = "input-xlarge"})
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"> Liquidação:</label>
+                                <div class="controls">
+                                    @Html.CheckBoxFor(x => x.Sale, new { @class = "input-xlarge"})
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"> Oferta:</label>
+                                <div class="controls">
+                                    @Html.CheckBoxFor(x => x.Offer, new { @class = "input-xlarge"})
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label"> Foto:</label>
+                                <div class="controls">
+                                    <input type="file" name="file" id="file" class="input-xlarge" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="pull-right">
+                        @*<label class="checkbox inline">
+                <input type="checkbox" value="option2" >
+              </label>
+              I have read and agree to the <a href="#" >Privacy Policy</a>
+              &nbsp;*@
+                        <input type="Submit" class="btn btn-orange" value="Salvar">
+                    </div>
+            }
+          <div class="clearfix"></div>
+          <br>
+        </div>        
+        <!-- Sidebar Start-->
+        @*<aside class="span3">
+          <div class="sidewidt">
+            <h2 class="heading2"><span>Account</span></h2>
+            <ul class="nav nav-list categories">
+              <li>
+                <a href="#"> My Account</a>
+              </li>
+              <li>
+                <a href="#">Edit Account</a>
+              </li>
+              <li>
+                <a href="#">Password</a>
+              </li>
+              <li>
+                <a href="#">Wish List</a>
+              </li>
+              <li><a href="#">Order History</a>
+              </li>
+              <li><a href="#">Downloads</a>
+              </li>
+              <li><a href="#">Returns</a>
+              </li>
+              <li>
+                <a href="#"> Transactions</a>
+              </li>
+              <li>
+                <a href="@Url.Action("Logout","Account")">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </aside>*@
+        <!-- Sidebar End-->
+      </div>
+    </div>
+  </section>
+</div>

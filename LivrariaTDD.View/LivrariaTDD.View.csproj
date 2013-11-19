@@ -39,7 +39,40 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AjaxMin">
+      <HintPath>..\packages\AjaxMin.4.46.4422.26284\lib\net20\AjaxMin.dll</HintPath>
+    </Reference>
+    <Reference Include="Cassette">
+      <HintPath>..\packages\Cassette.1.2.1\lib\net40-Client\Cassette.dll</HintPath>
+    </Reference>
+    <Reference Include="Cassette.Views">
+      <HintPath>..\packages\Cassette.Views.1.2.1\lib\net40\Cassette.Views.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby">
+      <HintPath>..\packages\IronRuby.1.1.3\Lib\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries">
+      <HintPath>..\packages\IronRuby.1.1.3\Lib\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries.Yaml">
+      <HintPath>..\packages\IronRuby.1.1.3\Lib\IronRuby.Libraries.Yaml.dll</HintPath>
+    </Reference>
+    <Reference Include="Jurassic">
+      <HintPath>..\packages\Jurassic.2.1.1\lib\Jurassic.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>..\packages\IronRuby.1.1.3\Lib\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\packages\IronRuby.1.1.3\Lib\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata">
+      <HintPath>..\packages\IronRuby.1.1.3\Lib\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
@@ -49,8 +82,20 @@
     <Reference Include="Ninject.Web.Common">
       <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net45-full\Ninject.Web.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject.Web.Mvc">
+      <HintPath>..\packages\Ninject.MVC3.3.0.0.6\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Omu.ValueInjecter">
       <HintPath>..\packages\ValueInjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="Pandora">
+      <HintPath>..\packages\Cassette.1.2.1\lib\net40-Client\Pandora.dll</HintPath>
+    </Reference>
+    <Reference Include="SassAndCoffee.Core">
+      <HintPath>..\packages\SassAndCoffee.Core.2.0.2.0\lib\net40-Client\SassAndCoffee.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SassAndCoffee.Ruby">
+      <HintPath>..\packages\SassAndCoffee.Ruby.2.0.2.0\lib\net40-Client\SassAndCoffee.Ruby.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -61,6 +106,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.Web.Optimization.1.0.0-beta\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -124,25 +172,135 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="Attributes\UniqueEmailAttribute.cs" />
+    <Compile Include="Controllers\Account\AccountController.cs" />
+    <Compile Include="Controllers\Admin\AdminController.cs" />
+    <Compile Include="Controllers\Admin\AdminController.Login.cs" />
+    <Compile Include="Controllers\Admin\AdminController.NewProduct.cs" />
+    <Compile Include="Controllers\Admin\AdminController.Edit.cs" />
+    <Compile Include="Controllers\Admin\AdminController.State.cs" />
+    <Compile Include="Controllers\Category\CategoryController.cs" />
+    <Compile Include="Controllers\Contact\ContactController.cs" />
+    <Compile Include="Controllers\Features\FeaturesController.cs" />
+    <Compile Include="Controllers\Home\HomeController.Search.cs" />
     <Compile Include="Controllers\Home\HomeController.cs" />
     <Compile Include="Controllers\Livros\LivroController.Cadastro.cs" />
     <Compile Include="Controllers\Livros\LivroController.cs" />
+    <Compile Include="Controllers\Livros\LivroController.Exclusao.cs" />
     <Compile Include="Controllers\Livros\LivroController.Listagem.cs" />
-    <Compile Include="Controllers\Usuario\UsuarioController.cs" />
+    <Compile Include="Controllers\Pedido\CarrinhoDeComprasController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\ShoppingCart\ShoppingCartController.cs" />
     <Compile Include="Controllers\Livros\LivroController.Visualizar.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Account\Login.cs" />
+    <Compile Include="Models\Account\User.cs" />
+    <Compile Include="Models\Product\Product.cs" />
+    <Compile Include="Models\Product\ProductList.cs" />
     <Compile Include="Models\UsuarioModel.cs" />
     <Compile Include="Module\BRLModule.cs" />
+    <Compile Include="Module\RepositoryModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\ProdutoModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\assets\ico\favicon.html" />
+    <Content Include="Content\css\bootstrap-responsive.css" />
+    <Content Include="Content\css\bootstrap-responsive.min.css" />
+    <Content Include="Content\css\bootstrap.css" />
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\cloud-zoom.css" />
+    <Content Include="Content\css\fb.css" />
+    <Content Include="Content\css\flexslider.css" />
+    <Content Include="Content\css\jquery.fancybox.css" />
+    <Content Include="Content\css\style.css" />
+    <Content Include="Content\fancybox\blank.gif" />
+    <Content Include="Content\fancybox\fancybox_loading.gif" />
+    <Content Include="Content\fancybox\fancybox_overlay.png" />
+    <Content Include="Content\fancybox\fancybox_sprite.png" />
+    <Content Include="Content\images\arrow-down.html" />
+    <Content Include="Content\images\arrow-right.html" />
+    <Content Include="Content\images\glyphicons-halflings-white.png" />
+    <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\Products\3.jpg" />
+    <Content Include="Content\img\accrodianicon.png" />
+    <Content Include="Content\img\addcart.png" />
+    <Content Include="Content\img\arrowcategory.png" />
+    <Content Include="Content\img\avtar.jpg" />
+    <Content Include="Content\img\banner1.jpg" />
+    <Content Include="Content\img\banner2.jpg" />
+    <Content Include="Content\img\bg_direction_nav.png" />
+    <Content Include="Content\img\brand1.jpg" />
+    <Content Include="Content\img\brand2.jpg" />
+    <Content Include="Content\img\brand3.jpg" />
+    <Content Include="Content\img\brand4.jpg" />
+    <Content Include="Content\img\carousalarrow.png" />
+    <Content Include="Content\img\down.png" />
+    <Content Include="Content\img\soldout.png" />
+    <Content Include="Content\img\footericon.png" />
+    <Content Include="Content\img\glyphicons-halflings-white.png" />
+    <Content Include="Content\img\glyphicons-halflings.png" />
+    <Content Include="Content\img\index3banner.jpg" />
+    <Content Include="Content\img\index3banner2.jpg" />
+    <Content Include="Content\img\list1.png" />
+    <Content Include="Content\img\list2.png" />
+    <Content Include="Content\img\list3.png" />
+    <Content Include="Content\img\list4.png" />
+    <Content Include="Content\img\list5.png" />
+    <Content Include="Content\img\list6.png" />
+    <Content Include="Content\img\logo.png" />
+    <Content Include="Content\img\messages.png" />
+    <Content Include="Content\img\new.png" />
+    <Content Include="Content\img\offer.png" />
+    <Content Include="Content\img\otherdetailicon.png" />
+    <Content Include="Content\img\otherseperate.png" />
+    <Content Include="Content\img\pricetag.png" />
+    <Content Include="Content\img\pricetagproduct.png" />
+    <Content Include="Content\img\prodcut-40x40.jpg" />
+    <Content Include="Content\img\prodcutcart.png" />
+    <Content Include="Content\img\product1.jpg" />
+    <Content Include="Content\img\product1a.jpg" />
+    <Content Include="Content\img\product1big.jpg" />
+    <Content Include="Content\img\product2.jpg" />
+    <Content Include="Content\img\product2a.jpg" />
+    <Content Include="Content\img\product2big.jpg" />
+    <Content Include="Content\img\productblog.jpg" />
+    <Content Include="Content\img\productpageicon.png" />
+    <Content Include="Content\img\proudctbanner.jpg" />
+    <Content Include="Content\img\rate.png" />
+    <Content Include="Content\img\remove.png" />
+    <Content Include="Content\img\sale.png" />
+    <Content Include="Content\img\slderleftimg.png" />
+    <Content Include="Content\img\smbanner.jpg" />
+    <Content Include="Content\img\spiral.png" />
+    <Content Include="Content\img\sprite.png" />
+    <Content Include="Content\img\update.png" />
+    <Content Include="Content\img\view.png" />
     <Content Include="Global.asax" />
+    <None Include="Scripts\js\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\custom\Register.js" />
+    <Content Include="Scripts\js\jquery.validate.js" />
+    <Content Include="Scripts\js\jquery.validate.min.js" />
+    <Content Include="Scripts\js\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\js\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\js\application.js" />
+    <Content Include="Scripts\js\bootstrap-tooltip.js" />
+    <Content Include="Scripts\js\bootstrap.js" />
+    <Content Include="Scripts\js\cloud-zoom.1.0.2.js" />
+    <Content Include="Scripts\js\custom.js" />
+    <Content Include="Scripts\js\jquery.ba-throttle-debounce.min.js" />
+    <Content Include="Scripts\js\jquery.carouFredSel-6.1.0-packed.js" />
+    <Content Include="Scripts\js\jquery.fancybox.js" />
+    <Content Include="Scripts\js\jquery.flexslider.js" />
+    <Content Include="Scripts\js\jquery.js" />
+    <Content Include="Scripts\js\jquery.mousewheel.min.js" />
+    <Content Include="Scripts\js\jquery.touchSwipe.min.js" />
+    <Content Include="Scripts\js\jquery.tweet.js" />
+    <Content Include="Scripts\js\respond.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -153,6 +311,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Shared\_Head.cshtml" />
+    <Content Include="Views\Shared\_LogOn.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -166,10 +327,68 @@
       <Project>{f9d76bbc-0632-43bf-95b7-41da1ea09ebc}</Project>
       <Name>LivrariaTDD.BRL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LivrariaTDD.DAL\LivrariaTDD.DAL.csproj">
+      <Project>{0dcca29b-8a80-4601-9807-1bf53d1ff661}</Project>
+      <Name>LivrariaTDD.DAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LivrariaTDD.Infrastructure\LivrariaTDD.Infrastructure.csproj">
       <Project>{97FD5BF4-3100-4F1E-96A5-85F6AA978217}</Project>
       <Name>LivrariaTDD.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Livro\VisualizarLivro.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Livro\ListagemDeProdutos.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Livro\CadastrarLivro.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_TopBar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Category\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contact\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Features\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Wishlist.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Register.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Login.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ShoppingCart\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ShoppingCart\Checkout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Login.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\NewProduct.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

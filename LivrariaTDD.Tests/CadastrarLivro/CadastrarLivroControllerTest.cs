@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using LivrariaTDD.Controllers.Livros;
-using LivrariaTDD.Infrastructure.BRL.Livro;
+using LivrariaTDD.Infrastructure.BRL.Product;
+using LivrariaTDD.Infrastructure.Enums;
+using LivrariaTDD.Infrastructure.Models;
 using LivrariaTDD.Models;
 using Moq;
 using NUnit.Framework;
+using Omu.ValueInjecter;
 
 namespace LivrariaTDD.MVCTests.CadastrarLivro
 {
@@ -11,12 +14,12 @@ namespace LivrariaTDD.MVCTests.CadastrarLivro
     public class CadastrarLivroControllerTest
     {
         private LivroController _controller;
-        private Mock<ILivroBusiness> _business;
+        private Mock<IProductBusiness> _business;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
-            _business = new Mock<ILivroBusiness>();
+            _business = new Mock<IProductBusiness>();
             _controller = new LivroController(_business.Object);
         }
 
@@ -43,45 +46,50 @@ namespace LivrariaTDD.MVCTests.CadastrarLivro
         }
 
         [Test]
-        public void QuandoUsuarioDigitarEOsDadosDoNovoLivroEClicarEmCadastrar_OControleDeveEnviarOsDadosParaQueACamadaDeNegociosSalveONovoLivro()
+        public void QuandoUsuarioDigitarOsDadosDoNovoLivroEClicarEmCadastrar_OControleDeveEnviarOsDadosParaQueACamadaDeNegociosSalveONovoLivro()
         {
-            var novoLivro = new ProdutoModel
+            var novoLivro = new Models.Product.Product
                 {
-                    Nome = "Torre Negra",
-                    Autor = "Stephen King",
-                    Editora = "Universal",
-                    Ano = 1995,
-                    Categoria = "Ficção",
-                    Estoque = 5,
-                    Preco = 150.0M,
-                    Foto = ""
+                    ProductId = 1,
+                    Name = "Torre Negra",
+                    Author = "Stephen King",
+                    Publishing = "Universal",
+                    Year = 1995,
+                    Category = Categories.LiteraturaEstrangeira,
+                    Stock = 5,
+                    Price = 150.0M,
+                    Photo = ""
                 };
 
-            _business.Setup(x => x.SalvarLivro(novoLivro.Nome, novoLivro.Autor, novoLivro.Editora, novoLivro.Ano, novoLivro.Categoria, novoLivro.Estoque, novoLivro.Preco, novoLivro.Foto)).Returns(true);
+            _business.Setup(x => x.SalvarLivro(It.IsAny<Product>())).Returns(new Product());
 
             _controller = new LivroController(_business.Object);
 
             _controller.CadastrarLivro(novoLivro);
 
-            _business.Verify(x => x.SalvarLivro(novoLivro.Nome, novoLivro.Autor, novoLivro.Editora, novoLivro.Ano, novoLivro.Categoria, novoLivro.Estoque, novoLivro.Preco, novoLivro.Foto), Times.AtLeastOnce());
+            _business.Verify(x => x.SalvarLivro(It.IsAny<Product>()), Times.AtLeastOnce());
         }
 
         [Test]
         public void CasoACamadaDeNegociosSalveOLivroComSucesso_OControleDeveEnviarUmaMensagemDeSucessoERetornarParaPaginaDeListagem()
         {
-            var novoLivro = new ProdutoModel
+            var novoLivro = new Models.Product.Product
                 {
-                Nome = "Torre Negra",
-                Autor = "Stephen King",
-                Editora = "Universal",
-                Ano = 1995,
-                Categoria = "Ficção",
-                Estoque = 5,
-                Preco = 150.0M,
-                Foto = ""
+                ProductId = 1,
+                Name = "Torre Negra",
+                Author = "Stephen King",
+                Publishing = "Universal",
+                Year = 1995,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 5,
+                Price = 150.0M,
+                Photo = ""
             };
 
-            _business.Setup(x => x.SalvarLivro(novoLivro.Nome, novoLivro.Autor, novoLivro.Editora, novoLivro.Ano, novoLivro.Categoria, novoLivro.Estoque, novoLivro.Preco, novoLivro.Foto)).Returns(true);
+            var livro = new Product();
+            livro.InjectFrom(novoLivro);
+
+            _business.Setup(x => x.SalvarLivro(It.IsAny<Product>())).Returns(livro);
 
             _controller = new LivroController(_business.Object);
 
@@ -95,26 +103,30 @@ namespace LivrariaTDD.MVCTests.CadastrarLivro
         [Test]
         public void CasoACamadaDeNegociosNaoSalveOLivroComSucesso_OControleDeveEnviarUmaMensagemDeFalhaEContinuarNaPaginaDeCadastro()
         {
-            var novoLivro = new ProdutoModel
+            var novoLivro = new Models.Product.Product
                 {
-                Nome = "Torre Negra",
-                Autor = "Stephen King",
-                Editora = "Universal",
-                Ano = 1995,
-                Categoria = "Ficção",
-                Estoque = 5,
-                Preco = 150.0M,
-                Foto = ""
+                Name = "Torre Negra",
+                Author = "Stephen King",
+                Publishing = "Universal",
+                Year = 1995,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 5,
+                Price = 150.0M,
+                Photo = ""
             };
 
-            _business.Setup(x => x.SalvarLivro(novoLivro.Nome, novoLivro.Autor, novoLivro.Editora, novoLivro.Ano, novoLivro.Categoria, novoLivro.Estoque, novoLivro.Preco, novoLivro.Foto)).Returns(false);
+            var produto = new Product();
+
+            produto.InjectFrom(novoLivro);
+
+            _business.Setup(x => x.SalvarLivro(produto)).Returns(produto);
 
             _controller = new LivroController(_business.Object);
 
             var result = _controller.CadastrarLivro(novoLivro);
 
             StringAssert.AreEqualIgnoringCase("CadastrarLivro", result.ViewName);
-            StringAssert.AreEqualIgnoringCase(novoLivro.Nome, ((ProdutoModel) result.Model).Nome);
+            StringAssert.AreEqualIgnoringCase(novoLivro.Name, ((Models.Product.Product)result.Model).Name);
             CollectionAssert.DoesNotContain(result.ViewData.Keys, "Sucesso");
             CollectionAssert.Contains(result.ViewData.Keys, "Falha");
         }

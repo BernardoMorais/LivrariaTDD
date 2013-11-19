@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LivrariaTDD.DAL.Models;
+﻿using System.Linq;
+using LivrariaTDD.DAL.Context;
 using LivrariaTDD.DAL.Repositories;
-using LivrariaTDD.Infrastructure.DAL.Context;
 using LivrariaTDD.Infrastructure.DAL.Repository;
+using LivrariaTDD.Infrastructure.Enums;
 using LivrariaTDD.Infrastructure.Models;
-using Moq;
 using NUnit.Framework;
 
 namespace LivrariaTDD.MVCTests.CadastrarLivro
@@ -16,120 +11,110 @@ namespace LivrariaTDD.MVCTests.CadastrarLivro
     [TestFixture]
     public class CadastrarLivroRepositoryTest
     {
-        private IProdutoRepository _repository;
-        private EnumerableQuery<IProduto> _listaDeProdutos;
+        private IProductRepository _repository;
 
-        [TestFixtureSetUp]
+        [SetUp]
         public void SetUp()
         {
-            _listaDeProdutos = new EnumerableQuery<IProduto>(new[]
-                {
-                    new Produto
-                        {
-                            Nome = "TDD desenvolvimento guiado por testes",
-                            Autor = "Kent Beck",
-                            Editora = "Bookman",
-                            Ano = 2010,
-                            Categoria = "Engenharia de Software",
-                            Estoque = 0,
-                            Preco = 50.0M,
-                            Foto = ""
-                        }
-                });
-        }
-
-        [Test]
-        [Ignore]
-        public void AoAcessarACamadaDeAcessoADadosParaSalvarUmLivro_OsProdutosDevemVirDaDoFrameworkDeORM()
-        {
-            var novoLivro = new Produto
+            using (var db = new LivrariaTDDContext())
             {
-                Nome = "Torre Negra",
-                Autor = "Stephen King",
-                Editora = "Universal",
-                Ano = 1995,
-                Categoria = "Ficção",
-                Estoque = 5,
-                Preco = 150.0M,
-                Foto = ""
-            };
+                foreach(var item in db.Products.ToList())
+                {
+                    db.Products.Remove(item);
+                }
 
-            var mockContext = new Mock<ILivrariaTDDContext>();
-
-            mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
-
-            _repository = new ProdutoRepository(mockContext.Object);
-
-            _repository.SalvarLivro(novoLivro.Nome, novoLivro.Autor, novoLivro.Editora, novoLivro.Ano, novoLivro.Categoria, novoLivro.Estoque, novoLivro.Preco, novoLivro.Foto);
-
-            mockContext.Verify(x => x.SaveChanges(), Times.AtLeastOnce());
+                db.SaveChanges();
+            }
         }
 
         [Test]
-        [Ignore]
         public void AoAcessarACamadaDeAcessoADadosParaSalvarUmLivro_DeveSalvarOLivroERetornarVerdadeiro()
         {
-            var novoLivro = new Produto
+            var novoLivro = new Product
             {
-                Nome = "Torre Negra",
-                Autor = "Stephen King",
-                Editora = "Universal",
-                Ano = 1995,
-                Categoria = "Ficção",
-                Estoque = 5,
-                Preco = 150.0M,
-                Foto = ""
+                Name = "Torre Negra",
+                Author = "Stephen King",
+                Publishing = "Universal",
+                Year = 1995,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 5,
+                Price = 150.0M,
+                Photo = ""
             };
 
-            var mockContext = new Mock<ILivrariaTDDContext>();
+            var auxContext = new LivrariaTDDContext();
 
-            mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
+            var mockContext = new LivrariaTDDContext();
 
-            _repository = new ProdutoRepository(mockContext.Object);
+            _repository = new ProdutoRepository(mockContext);
 
-            var countAntes = mockContext.Object.Produtos.Count();            
+            var countAntes = auxContext.Products.Count();
 
-            var result = _repository.SalvarLivro(novoLivro.Nome, novoLivro.Autor, novoLivro.Editora, novoLivro.Ano, novoLivro.Categoria, novoLivro.Estoque, novoLivro.Preco, novoLivro.Foto);
+            var result = _repository.SalvarLivro(novoLivro);
 
-            var countDepois = mockContext.Object.Produtos.Count();            
+            var countDepois = auxContext.Products.Count();            
 
-            Assert.True(result);
-            Assert.AreEqual(countAntes,1);
-            Assert.AreEqual(countDepois, 2);
+            Assert.NotNull(result);
+            Assert.AreEqual(0,countAntes);
+            Assert.AreEqual(1,countDepois);
         }
 
         [Test]
-        [Ignore]
-        public void AoAcessarACamadaDeAcessoADadosParaSalvarUmLivroEReceberUmErro_DeveNaoDeveSalvarOLivroERetonarFalso()
+        public void AoAcessarACamadaDeAcessoADadosParaSalvarUmLivroEReceberUmErro_NaoDeveSalvarOLivroERetonarFalso()
         {
-            var novoLivro = new Produto
+            var novoLivro = new Product
             {
-                Nome = "Torre Negra",
-                Autor = "Stephen King",
-                Editora = "Universal",
-                Ano = 1995,
-                Categoria = "Ficção",
-                Estoque = 5,
-                Preco = 150.0M,
-                Foto = ""
+                Name = "Torre Negra",
+                Author = "Stephen King",
+                Publishing = "Universal",
+                Year = 1995,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 5,
+                Price = 150.0M,
+                Photo = ""
             };
 
-            var mockContext = new Mock<ILivrariaTDDContext>();
+            var auxContext = new LivrariaTDDContext();
 
-            mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
-            mockContext.Setup(x => x.SaveChanges()).Throws<Exception>();
+            var mockContext = new LivrariaTDDContext("server=./SQLSeverS/tring Errada");
 
-            _repository = new ProdutoRepository(mockContext.Object);
+            _repository = new ProdutoRepository(mockContext);
 
-            var countAntes = mockContext.Object.Produtos.Count();
+            var countAntes = auxContext.Products.Count();
 
-            var result = _repository.SalvarLivro(novoLivro.Nome, novoLivro.Autor, novoLivro.Editora, novoLivro.Ano, novoLivro.Categoria, novoLivro.Estoque, novoLivro.Preco, novoLivro.Foto);
+            var result = _repository.SalvarLivro(novoLivro);
 
-            var countDepois = mockContext.Object.Produtos.Count();
+            var countDepois = auxContext.Products.Count();
 
-            Assert.False(result);
-            Assert.AreEqual(countAntes, 1);
-            Assert.AreEqual(countDepois, 1);
+            Assert.Null(result);
+            Assert.AreEqual(countAntes, 0);
+            Assert.AreEqual(countDepois, 0);
+        }
+
+        [Test]
+        public void AoAcessarACamadaDeAcessoADadosParaSalvarUmLivro_OLivroDeveSerCadastradoComStatus1Ativo()
+        {
+            var novoLivro = new Product
+            {
+                Name = "Torre Negra",
+                Author = "Stephen King",
+                Publishing = "Universal",
+                Year = 1995,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 5,
+                Price = 150.0M,
+                Photo = ""
+            };
+
+            var mockContext = new LivrariaTDDContext();
+
+            _repository = new ProdutoRepository(mockContext);
+
+            _repository.SalvarLivro(novoLivro);
+
+            var result = mockContext.Products.FirstOrDefault().Status;
+
+            Assert.AreEqual(ProductStatus.Active, result);
         }
     }
 }

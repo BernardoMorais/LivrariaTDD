@@ -1,4 +1,5 @@
-﻿using LivrariaTDD.Controllers;
+﻿using System.Web.Mvc;
+using LivrariaTDD.Controllers.Home;
 using LivrariaTDD.Infrastructure.View.Controllers;
 using NUnit.Framework;
 
@@ -16,7 +17,7 @@ namespace LivrariaTDD.MVCTests.Home
         }
 
         [Test]
-        public void QuandoAcessoOEnderecoPricipalDoSite_ComoFuncionarioDaLoja_APaginaDeListagemDeProdutosEAcessada()
+        public void QuandoAcessoOEnderecoPricipalDoSite_APaginaDeveSerAcessada()
         {
             #region Passo1
             //var controller = new Mock<IHomeController>();
@@ -30,11 +31,10 @@ namespace LivrariaTDD.MVCTests.Home
             //Assert.Contains("Index", result.RouteValues.Values);
             #endregion
 
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            Assert.Contains("ListagemDeProdutos", result.RouteValues.Values);
-
-            Assert.Contains("Index", result.RouteValues.Values);
+            Assert.NotNull(result);
+            StringAssert.AreEqualIgnoringCase("Index",result.ViewName);
         }
     }
 }

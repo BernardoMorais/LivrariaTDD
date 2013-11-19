@@ -1,7 +1,8 @@
 ﻿using System;
 using LivrariaTDD.BRL.Livro;
-using LivrariaTDD.Infrastructure.BRL.Livro;
+using LivrariaTDD.Infrastructure.BRL.Product;
 using LivrariaTDD.Infrastructure.DAL.Repository;
+using LivrariaTDD.Infrastructure.Enums;
 using LivrariaTDD.Infrastructure.Models;
 using Moq;
 using NUnit.Framework;
@@ -11,59 +12,59 @@ namespace LivrariaTDD.MVCTests.VisualizarLivro
     [TestFixture]
     public class VisualizarLivroBusinessTest
     {
-        private ILivroBusiness _business;
-        private Mock<IProdutoRepository> _repository;
-        private DAL.Models.Produto _livroTDD;
-        private DAL.Models.Produto _livroRomance;
-        private DAL.Models.Produto _livroFiccao;
+        private IProductBusiness _business;
+        private Mock<IProductRepository> _repository;
+        private Product _livroTDD;
+        private Product _livroRomance;
+        private Product _livroFiccao;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
-            _livroTDD = new DAL.Models.Produto
+            _livroTDD = new Product
             {
-                IdProduto = 1,
-                Nome = "TDD desenvolvimento guiado por testes",
-                Autor = "Kent Beck",
-                Editora = "Bookman",
-                Ano = 2010,
-                Categoria = "Engenharia de Software",
-                Estoque = 0,
-                Preco = 50.0M,
-                Foto = ""
+                ProductId = 1,
+                Name = "TDD desenvolvimento guiado por testes",
+                Author = "Kent Beck",
+                Publishing = "Bookman",
+                Year = 2010,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 0,
+                Price = 50.0M,
+                Photo = ""
             };
 
-            _livroRomance = new DAL.Models.Produto
+            _livroRomance = new Product
             {
-                IdProduto = 2,
-                Nome = "O Amor",
-                Autor = "Escritora Romance",
-                Editora = "Bookman",
-                Ano = 2007,
-                Categoria = "Ficção",
-                Estoque = 0,
-                Preco = 30.0M,
-                Foto = ""
+                ProductId = 2,
+                Name = "O Amor",
+                Author = "Escritora Romance",
+                Publishing = "Bookman",
+                Year = 2007,
+                Category = Categories.LiteraturaBrasileira,
+                Stock = 0,
+                Price = 30.0M,
+                Photo = ""
             };
 
-            _livroFiccao = new DAL.Models.Produto
+            _livroFiccao = new Product
             {
-                IdProduto = 3,
-                Nome = "O Senhor Dos Aneis",
-                Autor = "Tolken J.R.",
-                Editora = "Abril",
-                Ano = 2005,
-                Categoria = "Ficção",
-                Estoque = 0,
-                Preco = 100.0M,
-                Foto = ""
+                ProductId = 3,
+                Name = "O Senhor Dos Aneis",
+                Author = "Tolken J.R.",
+                Publishing = "Abril",
+                Year = 2005,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 0,
+                Price = 100.0M,
+                Photo = ""
             };
 
-            _repository = new Mock<IProdutoRepository>();
+            _repository = new Mock<IProductRepository>();
             _repository.Setup(x => x.RecuperarInformacoesDoLivro(1)).Returns(_livroTDD);
             _repository.Setup(x => x.RecuperarInformacoesDoLivro(2)).Returns(_livroRomance);
             _repository.Setup(x => x.RecuperarInformacoesDoLivro(3)).Returns(_livroFiccao);
-            _business = new LivroBusiness(_repository.Object);
+            _business = new ProductBusiness(_repository.Object);
         }
         
         #region US3
@@ -73,11 +74,11 @@ namespace LivrariaTDD.MVCTests.VisualizarLivro
         {
             const int id = 1;
 
-            var result = _business.RecuperarInformacoesDoLivro(id);
+            var result = _business.GetInfo(id);
 
             _repository.Verify(x => x.RecuperarInformacoesDoLivro(id), Times.AtLeastOnce());
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf<IProduto>(result);
+            Assert.IsInstanceOf<Product>(result);
         }
 
         [Test]
@@ -85,36 +86,36 @@ namespace LivrariaTDD.MVCTests.VisualizarLivro
         {
             const int id = 1;
 
-            var repository = new Mock<IProdutoRepository>();
+            var repository = new Mock<IProductRepository>();
 
             repository.Setup(x => x.RecuperarInformacoesDoLivro(id)).Throws<Exception>();
 
-            var business = new LivroBusiness(repository.Object);
+            var business = new ProductBusiness(repository.Object);
 
-            Assert.Throws<Exception>(() => business.RecuperarInformacoesDoLivro(id));
+            Assert.Throws<Exception>(() => business.GetInfo(id));
         }
 
         [Test]
         public void AoAcessarACamadaDeNegociosParaAlterarUmLivro_OLivroDeveSerEnviadoParaSeSalvoNaCamadaDeAcessoADados()
         {
-            var novosValores = new DAL.Models.Produto
+            var novosValores = new Product
             {
-                IdProduto = 3,
-                Nome = "A Bela e a Fera",
-                Autor = "Popular",
-                Editora = "Abril",
-                Ano = 2005,
-                Categoria = "Infantil",
-                Estoque = 10,
-                Preco = 10.0M,
-                Foto = ""
+                ProductId = 3,
+                Name = "A Bela e a Fera",
+                Author = "Popular",
+                Publishing = "Abril",
+                Year = 2005,
+                Category = Categories.InfantoJuvenis,
+                Stock = 10,
+                Price = 10.0M,
+                Photo = ""
             };
 
-            _repository.Setup(x => x.AlterarLivro(novosValores.IdProduto, novosValores.Nome, novosValores.Autor, novosValores.Editora, novosValores.Ano, novosValores.Categoria, novosValores.Estoque, novosValores.Preco, novosValores.Foto)).Returns(true);
+            _repository.Setup(x => x.AlterarLivro(novosValores)).Returns(true);
 
-            var result = _business.AlterarLivro(novosValores.IdProduto, novosValores.Nome, novosValores.Autor, novosValores.Editora, novosValores.Ano, novosValores.Categoria, novosValores.Estoque, novosValores.Preco, novosValores.Foto);
+            var result = _business.Update(novosValores);
 
-            _repository.Verify(x => x.AlterarLivro(novosValores.IdProduto, novosValores.Nome, novosValores.Autor, novosValores.Editora, novosValores.Ano, novosValores.Categoria, novosValores.Estoque, novosValores.Preco, novosValores.Foto), Times.AtLeastOnce());
+            _repository.Verify(x => x.AlterarLivro(novosValores), Times.AtLeastOnce());
             Assert.True(result);
         }
 

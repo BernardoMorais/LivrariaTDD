@@ -1,68 +1,100 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using LivrariaTDD.DAL.Models;
-using LivrariaTDD.Infrastructure.DAL.Context;
+using LivrariaTDD.DAL.Context;
 using LivrariaTDD.Infrastructure.DAL.Repository;
+using LivrariaTDD.Infrastructure.Enums;
 using LivrariaTDD.Infrastructure.Models;
 
 namespace LivrariaTDD.DAL.Repositories
 {
-    public class ProdutoRepository : IProdutoRepository
+    public class ProdutoRepository : IProductRepository
     {
-        private readonly ILivrariaTDDContext _context;
+        private readonly LivrariaTDDContext _context;
 
-        public ProdutoRepository(ILivrariaTDDContext context)
+        public ProdutoRepository(LivrariaTDDContext context)
         {
             _context = context;
         }
 
-        public List<IProduto> RecuperarTodosProdutos()
+        public List<Product> GetActiveProducts()
         {
-            var query = _context.Produtos.Select(produto => produto);
+            var query = _context.Set<Product>().Where(x => x.Status == ProductStatus.Active);
 
             return query.ToList();
         }
 
-        public IProduto RecuperarInformacoesDoLivro(int id)
+        public List<Product> RecuperarTodosProdutos()
         {
-            var query = _context.Produtos.Where(x => x.IdProduto == id);
+            var query = _context.Set<Product>();
+
+            return query.ToList();
+        }
+
+        public Product RecuperarInformacoesDoLivro(int id)
+        {
+            var query = _context.Set<Product>().Where(x => x.ProductId == id);
 
             return query.FirstOrDefault();
         }
 
-        public bool AlterarLivro(int idProduto, string nome, string autor, string editora, int ano, string categoria, int estoque, decimal preco, string foto)
+        public bool AlterarLivro(Product novoProduto)
         {
-            var produtoAntigo = _context.Produtos.First(x => x.IdProduto == idProduto);
-            produtoAntigo.Nome = nome;
-            produtoAntigo.Autor = autor;
-            produtoAntigo.Editora = editora;
-            produtoAntigo.Ano = ano;
-            produtoAntigo.Categoria = categoria;
-            produtoAntigo.Estoque = estoque;
-            produtoAntigo.Preco = preco;
-            produtoAntigo.Foto = foto;
+            var produtoAntigo = _context.Set<Product>().First(x => x.ProductId == novoProduto.ProductId);
+            produtoAntigo.Name = novoProduto.Name;
+            produtoAntigo.Author = novoProduto.Author;
+            produtoAntigo.Publishing = novoProduto.Publishing;
+            produtoAntigo.Year = novoProduto.Year;
+            produtoAntigo.Category = novoProduto.Category;
+            produtoAntigo.Stock = novoProduto.Stock;
+            produtoAntigo.Price = novoProduto.Price;
+            produtoAntigo.Photo = novoProduto.Photo;
 
             _context.SaveChanges();
             return true;
         }
 
-        public bool SalvarLivro(string nome, string autor, string editora, int ano, string categoria, int estoque, decimal preco, string foto)
+        public Product SalvarLivro(Product novoProduto)
         {
-            var produto = new Produto
-                {
-                    Nome = nome,
-                    Autor = autor,
-                    Editora = editora,
-                    Ano = ano,
-                    Categoria = categoria,
-                    Estoque = estoque,
-                    Preco = preco,
-                    Foto = foto
-                };
+            try
+            {
+                //var produto = new Product
+                //    {
+                //        Name = novoProduto.Name,
+                //        Author = novoProduto.Author,
+                //        Publishing = novoProduto.Publishing,
+                //        Year = novoProduto.Year,
+                //        Category = novoProduto.Category,
+                //        Stock = novoProduto.Stock,
+                //        Price = novoProduto.Price,
+                //        Photo = novoProduto.Photo,
+                //        Status = ProductStatus.Active
+                //    };
 
-            _context.GetProdutos().Add(produto);
+                novoProduto.Status = ProductStatus.Active;
 
-            return true;
+                    _context.Set<Product>().Add(novoProduto);
+
+                    _context.SaveChanges();
+
+                    return novoProduto;
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+        }
+
+        public bool ExcluirLivro(int produtoId)
+        {
+            var produtoAntigo = _context.Set<Product>().FirstOrDefault(x => x.ProductId == produtoId);
+            if (produtoAntigo != null)
+            {
+                produtoAntigo.Status = ProductStatus.Inative; //Deletado
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

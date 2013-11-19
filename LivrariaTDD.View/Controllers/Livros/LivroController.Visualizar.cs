@@ -1,5 +1,6 @@
 using System.Web.Mvc;
 using LivrariaTDD.Infrastructure.Helpers;
+using LivrariaTDD.Infrastructure.Models;
 using LivrariaTDD.Models;
 using Omu.ValueInjecter;
 
@@ -11,9 +12,9 @@ namespace LivrariaTDD.Controllers.Livros
         {
             Helpers.CarregarDadosUsuario(ViewData);
 
-            var produto = _business.RecuperarInformacoesDoLivro(id);
+            var produto = _business.GetInfo(id);
 
-            var produtoModel = new ProdutoModel();
+            var produtoModel = new Models.Product.Product();
 
             produtoModel.InjectFrom(produto);
 
@@ -22,24 +23,17 @@ namespace LivrariaTDD.Controllers.Livros
             return View("VisualizarLivro");
         }
 
-        public ViewResult AlterarLivro(int idProduto, string nome, string autor, string editora, int ano, string categoria, int estoque, decimal preco, string foto)
+        public ViewResult AlterarLivro(Models.Product.Product novoProduto)
         {
             Helpers.CarregarDadosUsuario(ViewData);
 
-            var result = _business.AlterarLivro(idProduto, nome, autor, editora, ano, categoria, estoque, preco, foto);
+            var produto = new Product();
 
-            ViewData["livro"] = new ProdutoModel
-                {
-                    IdProduto = idProduto,
-                    Nome = nome,
-                    Autor = autor,
-                    Editora = editora,
-                    Ano = ano,
-                    Categoria = categoria,
-                    Estoque = estoque,
-                    Preco = preco,
-                    Foto = foto
-                };
+            produto.InjectFrom(novoProduto);
+
+            var result = _business.Update(produto);
+
+            ViewData["livro"] = novoProduto;
 
             if(result)
             {

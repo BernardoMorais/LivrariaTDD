@@ -1,0 +1,194 @@
+﻿@model LivrariaTDD.Models.Account.User
+@{
+    ViewBag.Title = "Registrar";
+    Layout = "../Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/js/jquery.js" type="text/javascript"></script>
+<script src="~/Scripts/js/jquery.validate.js" type="text/javascript"></script>
+<script src="~/Scripts/js/jquery.validate.unobtrusive.js" type="text/javascript"></script>
+<script src="~/Scripts/custom/Register.js" type="text/javascript"></script>
+<div id="maincontainer">
+  <section id="product">
+    <div class="container">
+     <!--  breadcrumb --> 
+      @*<ul class="breadcrumb">
+        <li>
+          <a href="#">Home</a>
+          <span class="divider">/</span>
+        </li>
+        <li class="active">Register Account</li>
+      </ul>*@
+      <div class="row">        
+        <!-- Register Account-->
+        <div class="span9">
+          <h1 class="heading1"><span class="maintext">Nova Conta</span><span class="subtext"></span></h1>
+          @using(Html.BeginForm("Register","Account",FormMethod.Post, new { @class="form-horizontal" }))
+          {
+              <h3 class="heading3">Pessoal</h3>
+              <div class="registerbox">
+                  <fieldset>
+                      <div class="control-group">
+                          <label class="control-label"><span class="red">*</span> Nome Completo:</label>
+                          <div class="controls">
+                                @Html.TextBoxFor(x => x.Name, new {@class="input-xlarge"})
+                                @Html.ValidationMessageFor(x => x.Name)
+                          </div>
+                      </div>
+                      <div class="control-group">
+                          <label class="control-label"><span class="red">*</span> Email:</label>
+                          <div class="controls">
+                                @Html.TextBoxFor(x => x.Email, new {@class="input-xlarge"})
+                                @Html.ValidationMessageFor(x => x.Email)
+                          </div>
+                      </div>
+                      <div class="control-group">
+                          <label class="control-label"><span class="red">*</span> Telefone:</label>
+                          <div class="controls">
+                                @Html.TextBoxFor(x => x.Phone, new {@class="input-xlarge"})
+                                @Html.ValidationMessageFor(x => x.Phone)
+                          </div>
+                      </div>
+                      <div class="control-group">
+                          <label class="control-label"> Celular:</label>
+                          <div class="controls">
+                                @Html.TextBoxFor(x => x.CellPhone, new {@class="input-xlarge"})
+                          </div>
+                      </div>
+                  </fieldset>
+              </div>
+              <h3 class="heading3">Endereço</h3>
+              <div class="registerbox">
+                  <fieldset>
+                      <div class="control-group">
+                          <label class="control-label"><span class="red">*</span> Rua:</label>
+                          <div class="controls">
+                                @Html.TextBoxFor(x => x.Address, new {@class="input-xlarge"})
+                                @Html.ValidationMessageFor(x => x.Address)
+                          </div>
+                      </div>
+                      <div class="control-group">
+                          <label class="control-label"><span class="red">*</span> Número:</label>
+                          <div class="controls">
+                              @Html.TextBoxFor(x => x.Number, new {@class="input-xlarge"})
+                              @Html.ValidationMessageFor(x => x.Number)
+                          </div>
+                      </div>
+                      <div class="control-group">
+                          <label class="control-label"><span class="red">*</span> Bairro:</label>
+                          <div class="controls">
+                                @Html.TextBoxFor(x => x.District, new {@class="input-xlarge"})
+                                @Html.ValidationMessageFor(x => x.District)
+                          </div>
+                      </div>
+                      <div class="control-group">
+                          <label class="control-label">
+                              <span class="red">*</span> Cidade:</label>
+                          <div class="controls">
+                                @Html.TextBoxFor(x => x.City, new {@class="input-xlarge"})
+                                @Html.ValidationMessageFor(x => x.City)
+                          </div>
+                      </div>
+                      <div class="control-group">
+                          <label class="control-label">
+                              <span class="red">*</span> CEP:</label>
+                          <div class="controls">
+                                @Html.TextBoxFor(x => x.ZipCode, new {@class="input-xlarge"})
+                                @Html.ValidationMessageFor(x => x.ZipCode)
+                          </div>
+                      </div>
+                      <div class="control-group">
+                          <label class="control-label">
+                              <span class="red">*</span> Estado:</label>
+                          <div class="controls">
+                                @{ 
+                                    var stateList = new List<SelectListItem> {new SelectListItem {Selected = false, Text = "AC", Value = "AC"}, new SelectListItem {Selected = false, Text = "AL", Value = "AL"}, new SelectListItem {Selected = false, Text = "AP", Value = "AP"}, new SelectListItem {Selected = false, Text = "AM", Value = "AM"}, new SelectListItem {Selected = false, Text = "BA", Value = "BA"}, new SelectListItem {Selected = false, Text = "CE", Value = "CE"}, new SelectListItem {Selected = false, Text = "DF", Value = "DF"}, new SelectListItem {Selected = false, Text = "ES", Value = "ES"}, new SelectListItem {Selected = false, Text = "GO", Value = "GO"}, new SelectListItem {Selected = false, Text = "MA", Value = "MA"}, new SelectListItem {Selected = false, Text = "MT", Value = "MT"}, new SelectListItem {Selected = false, Text = "MS", Value = "MS"}, new SelectListItem {Selected = false, Text = "MG", Value = "MG"}, new SelectListItem {Selected = false, Text = "PA", Value = "PA"}, new SelectListItem {Selected = false, Text = "PB", Value = "PB"}, new SelectListItem {Selected = false, Text = "PR", Value = "PR"}, new SelectListItem {Selected = false, Text = "PE", Value = "PE"}, new SelectListItem {Selected = false, Text = "PI", Value = "PI"}, new SelectListItem {Selected = false, Text = "RJ", Value = "RJ"}, new SelectListItem {Selected = false, Text = "RN", Value = "RN"}, new SelectListItem {Selected = false, Text = "RS", Value = "RS"}, new SelectListItem {Selected = false, Text = "RO", Value = "RO"}, new SelectListItem {Selected = false, Text = "RR", Value = "RR"}, new SelectListItem {Selected = false, Text = "SC", Value = "SC"}, new SelectListItem {Selected = false, Text = "SP", Value = "SP"}, new SelectListItem {Selected = false, Text = "SE", Value = "SE"}, new SelectListItem {Selected = false, Text = "TO", Value = "TO"}};
+                                }
+                                @Html.DropDownListFor(x => x.State, stateList)
+                                @Html.ValidationMessageFor(x => x.State)
+                          </div>
+                      </div>
+                  </fieldset>
+              </div>
+              <h3 class="heading3">Senha</h3>
+              <div class="registerbox">
+                  <fieldset>
+                      <div class="control-group">
+                          <label  class="control-label"><span class="red">*</span> Senha:</label>
+                          <div class="controls">
+                                @Html.PasswordFor(x => x.Password, new {@class="input-xlarge"})
+                                @Html.ValidationMessageFor(x => x.Password)
+                          </div>
+                      </div>
+                      <div class="control-group">
+                          <label  class="control-label"><span class="red">*</span> Confirmar Senha:</label>
+                          <div class="controls">
+                                @Html.PasswordFor(x => x.ConfirmPassword, new {@class="input-xlarge"})
+                                @Html.ValidationMessageFor(x => x.ConfirmPassword)
+                          </div>
+                      </div>
+                  </fieldset>
+              </div>
+              <h3 class="heading3">Sistema</h3>
+              <div class="registerbox">
+                  <fieldset>
+                      <div class="control-group">
+                          <label class="control-label"><span class="red">*</span> Tipo de usuário:</label>
+                          <div class="controls">
+                                @{
+                                    var userTypes = new List<SelectListItem> {new SelectListItem {Selected = false, Text = "user", Value = "user"}, new SelectListItem {Selected = false, Text = "admin", Value = "admin"}};
+                                }
+                                @Html.DropDownListFor(x => x.UserType, userTypes)
+                                @Html.ValidationMessageFor(x => x.UserType)
+                          </div>
+                      </div>
+                  </fieldset>
+              </div>
+              <div class="pull-right">
+                  @*<label class="checkbox inline">
+                      <input type="checkbox" value="option2" >
+                  </label>
+                  I have read and agree to the <a href="#" >Privacy Policy</a>
+                  &nbsp;*@
+                  <input type="Submit" class="btn btn-orange" value="Continue">
+              </div>
+          }
+          <div class="clearfix"></div>
+          <br>
+        </div>        
+        <!-- Sidebar Start-->
+        @*<aside class="span3">
+          <div class="sidewidt">
+            <h2 class="heading2"><span>Account</span></h2>
+            <ul class="nav nav-list categories">
+              <li>
+                <a href="#"> My Account</a>
+              </li>
+              <li>
+                <a href="#">Edit Account</a>
+              </li>
+              <li>
+                <a href="#">Password</a>
+              </li>
+              <li>
+                <a href="#">Wish List</a>
+              </li>
+              <li><a href="#">Order History</a>
+              </li>
+              <li><a href="#">Downloads</a>
+              </li>
+              <li><a href="#">Returns</a>
+              </li>
+              <li>
+                <a href="#"> Transactions</a>
+              </li>
+              <li>
+                <a href="@Url.Action("Logout","Account")">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </aside>*@
+        <!-- Sidebar End-->
+      </div>
+    </div>
+  </section>
+</div>

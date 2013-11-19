@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using LivrariaTDD.Controllers;
-using LivrariaTDD.Infrastructure.BRL;
+﻿using System.Collections.Generic;
+using LivrariaTDD.Infrastructure.Enums;
 using LivrariaTDD.Infrastructure.Models;
-using LivrariaTDD.Infrastructure.View.Controllers;
-using LivrariaTDD.Models;
-using Moq;
 using NUnit.Framework;
 using Omu.ValueInjecter;
 
@@ -15,37 +9,37 @@ namespace LivrariaTDD.MVCTests.Common
     [TestFixture]
     public class ValueINjecterTest
     {
-        private List<IProduto> _listagemDeProdutosEntity;
+        private List<Product> _listagemDeProdutosEntity;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
-            _listagemDeProdutosEntity = new List<IProduto>
+            _listagemDeProdutosEntity = new List<Product>
                 {
-                    new LivrariaTDD.DAL.Models.Produto { Nome = "TDD desenvolvimento guiado por testes", Autor = "Kent Beck", Editora = "Bookman", Ano = 2010, Categoria = "Engenharia de Software", Estoque = 0, Preco = 50.0M, Foto = "" }
+                    new Product { Name = "TDD desenvolvimento guiado por testes", Author = "Kent Beck", Publishing = "Bookman", Year = 2010, Category = Categories.LiteraturaEstrangeira, Stock = 0, Price = 50.0M, Photo = "" }
                 };
         }
 
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutos_ComoFuncionarioDaLoja_OsProdutosEnviadosParaTelaDevemSerObjetosDoProjetoMVC()
         {
-            var novaLista = new List<ProdutoModel>();
+            var novaLista = new List<Models.Product.Product>();
 
             foreach (var produto in _listagemDeProdutosEntity)
             {
-                var novoProduto = new ProdutoModel();
+                var novoProduto = new Models.Product.Product();
                 novoProduto.InjectFrom(produto);
                 novaLista.Add(novoProduto);
             }
 
-            StringAssert.AreEqualIgnoringCase(_listagemDeProdutosEntity[0].Nome, novaLista[0].Nome);
-            StringAssert.AreEqualIgnoringCase(_listagemDeProdutosEntity[0].Autor, novaLista[0].Autor);
-            StringAssert.AreEqualIgnoringCase(_listagemDeProdutosEntity[0].Editora, novaLista[0].Editora);
-            Assert.AreEqual(_listagemDeProdutosEntity[0].Ano, novaLista[0].Ano);
-            StringAssert.AreEqualIgnoringCase(_listagemDeProdutosEntity[0].Categoria, novaLista[0].Categoria);
-            Assert.AreEqual(_listagemDeProdutosEntity[0].Estoque, novaLista[0].Estoque);
-            Assert.AreEqual(_listagemDeProdutosEntity[0].Preco, novaLista[0].Preco);
-            StringAssert.AreEqualIgnoringCase(_listagemDeProdutosEntity[0].Foto, novaLista[0].Foto);
+            StringAssert.AreEqualIgnoringCase(_listagemDeProdutosEntity[0].Name, novaLista[0].Name);
+            StringAssert.AreEqualIgnoringCase(_listagemDeProdutosEntity[0].Author, novaLista[0].Author);
+            StringAssert.AreEqualIgnoringCase(_listagemDeProdutosEntity[0].Publishing, novaLista[0].Publishing);
+            Assert.AreEqual(_listagemDeProdutosEntity[0].Year, novaLista[0].Year);
+            Assert.AreEqual(_listagemDeProdutosEntity[0].Category, novaLista[0].Category);
+            Assert.AreEqual(_listagemDeProdutosEntity[0].Stock, novaLista[0].Stock);
+            Assert.AreEqual(_listagemDeProdutosEntity[0].Price, novaLista[0].Price);
+            StringAssert.AreEqualIgnoringCase(_listagemDeProdutosEntity[0].Photo, novaLista[0].Photo);
         }
     }
 }

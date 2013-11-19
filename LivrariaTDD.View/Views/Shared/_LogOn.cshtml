@@ -1,0 +1,18 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <div class="btn-group pull-right">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> @User.Identity.Name <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="#">Sair</a></li>
+        </ul>
+    </div>
+}
+else
+{
+    <form class="navbar-form pull-right">
+        <input class="span2" type="text" placeholder="Email">
+        <input class="span2" type="password" placeholder="Senha">
+        <button type="submit" class="btn">Entrar</button>
+    </form>
+
+}

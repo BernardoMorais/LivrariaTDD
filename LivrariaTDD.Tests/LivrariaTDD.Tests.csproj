@@ -122,18 +122,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\AdminControllerTest.cs" />
     <Compile Include="CadastrarLivro\CadastrarLivroBusinessTest.cs" />
     <Compile Include="CadastrarLivro\CadastrarLivroControllerTest.cs" />
     <Compile Include="CadastrarLivro\CadastrarLivroRepositoryTest.cs" />
+    <Compile Include="CarrinhoDeCompras\CarrinhoDeComprasBusinessTest.cs" />
+    <Compile Include="CarrinhoDeCompras\CarrinhoDeComprasRepositoryTest.cs" />
     <Compile Include="Common\CommonTest.cs" />
     <Compile Include="Common\ValueInjecterTest.cs" />
+    <Compile Include="ExcluirLivro\ExcluirLivroBusinessTest.cs" />
+    <Compile Include="ExcluirLivro\ExcluirLivroControllerTest.cs" />
+    <Compile Include="ExcluirLivro\ExcluirLivroRepositoryTest.cs" />
     <Compile Include="Home\HomeControllerTest.cs" />
     <Compile Include="ListagemDeProdutos\ListagemDeProdutosBusinessTest.cs" />
     <Compile Include="ListagemDeProdutos\ListagemDeProdutosControllerTest.cs" />
     <Compile Include="ListagemDeProdutos\ListagemDeProdutosRepositoryTest.cs" />
-    <Compile Include="Login\UsuarioBusinessTest.cs" />
-    <Compile Include="Login\UsuarioControllerTest.cs" />
-    <Compile Include="Login\UsuarioRepositoryTest.cs" />
+    <Compile Include="Account\AccountBusinessTest.cs" />
+    <Compile Include="Account\AccountControllerTest.cs" />
+    <Compile Include="Account\AccountRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualizarLivro\VisualizarLivroBusinessTest.cs" />
     <Compile Include="VisualizarLivro\VisualizarLivroControllerTest.cs" />

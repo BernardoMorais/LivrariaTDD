@@ -52,15 +52,15 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Models\FormaDePagamento.cs" />
-    <Compile Include="Models\Pedido.cs" />
-    <Compile Include="Models\Produto.cs" />
-    <Compile Include="Models\Usuario.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\PedidoRepository.cs" />
     <Compile Include="Repositories\ProdutoRepository.cs" />
-    <Compile Include="Repositories\UsuarioRepository.cs" />
+    <Compile Include="Repositories\AccountRepository.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LivrariaTDD.Infrastructure\LivrariaTDD.Infrastructure.csproj">
       <Project>{97fd5bf4-3100-4f1e-96a5-85f6aa978217}</Project>

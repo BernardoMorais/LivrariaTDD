@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using LivrariaTDD.DAL.Models;
+using LivrariaTDD.DAL.Context;
 using LivrariaTDD.DAL.Repositories;
-using LivrariaTDD.Infrastructure.DAL.Context;
 using LivrariaTDD.Infrastructure.DAL.Repository;
+using LivrariaTDD.Infrastructure.Enums;
 using LivrariaTDD.Infrastructure.Models;
-using Moq;
 using NUnit.Framework;
 
 namespace LivrariaTDD.MVCTests.ListagemDeProdutos
@@ -14,67 +12,113 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
     [TestFixture]
     public class ListagemDeProdutosRepositoryTest
     {
-        private IProdutoRepository _repository;
-        private EnumerableQuery<IProduto> _listaDeProdutos;
+        private IProductRepository _repository;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
-            _listaDeProdutos = new EnumerableQuery<IProduto>(new[]
+            using (var db = new LivrariaTDDContext())
+            {
+                foreach (var item in db.Products.ToList())
                 {
-                    new Produto
-                        {
-                            Nome = "TDD desenvolvimento guiado por testes",
-                            Autor = "Kent Beck",
-                            Editora = "Bookman",
-                            Ano = 2010,
-                            Categoria = "Engenharia de Software",
-                            Estoque = 0,
-                            Preco = 50.0M,
-                            Foto = ""
-                        }
-                });
-        }
+                    db.Products.Remove(item);
+                }
 
-        [Test]
-        public void AoAcessarACamadaDeAcessoADadosDaPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemVirDaDoFrameworkDeORM()
-        {
-            var mockContext = new Mock<ILivrariaTDDContext>();
+                db.SaveChanges();
 
-            mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
+                var produto = new Product
+                {
+                    Name = "TDD desenvolvimento guiado por testes",
+                    Author = "Kent Beck",
+                    Publishing = "Bookman",
+                    Year = 2010,
+                    Category = Categories.LiteraturaEstrangeira,
+                    Stock = 0,
+                    Price = 50.0M,
+                    Photo = "",
+                    Status = ProductStatus.Active
+                };
 
-            _repository = new ProdutoRepository(mockContext.Object);
-
-            _repository.RecuperarTodosProdutos();
-
-            mockContext.Verify(x => x.Produtos, Times.AtLeastOnce());
+                db.Products.Add(produto);
+                db.SaveChanges();
+            } 
         }
 
         [Test]
         public void AoAcessarACamadaDeAcessoADadosDaPaginaDeListagemDaPaginaDeListagemEOcorreUmaExcecao_AExcecaoDeveSerLancadaParaCamadaSuperior()
         {
-            var mockContext = new Mock<ILivrariaTDDContext>();
+            var mockContext = new LivrariaTDDContext("server=./SQLServerStringErrada");
 
-            mockContext.Setup(x => x.Produtos).Throws<Exception>();
+            //mockContext.Setup(x => x.Produtos).Throws<Exception>();
 
-            _repository = new ProdutoRepository(mockContext.Object);
+            _repository = new ProdutoRepository(mockContext);
 
-            Assert.Throws<Exception>(() => _repository.RecuperarTodosProdutos());
+            Assert.Throws<System.Data.DataException>(() => _repository.RecuperarTodosProdutos());
         }
 
         [Test]
         public void AoAcessarACamadaDeNegociosDaPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemVirDaCamadaDeAcessoADados()
         {
-            var mockContext = new Mock<ILivrariaTDDContext>();
+            var mockContext = new LivrariaTDDContext();
 
-            mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
+            //mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
 
-            _repository = new ProdutoRepository(mockContext.Object);
+            _repository = new ProdutoRepository(mockContext);
 
             var result = _repository.RecuperarTodosProdutos();
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf<List<IProduto>>(result);
+            Assert.IsInstanceOf<List<Product>>(result);
+            CollectionAssert.AllItemsAreNotNull(result);
+            CollectionAssert.IsNotEmpty(result);
+        }
+
+        [Test]
+        public void AoAcessarACamadaDeNegociosDaPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemVirSomenteLivrosComStatus1Ativo()
+        {
+            using (var livrariaContext = new LivrariaTDDContext())
+            {
+                var novoLivro = new Product
+                {
+                    Name = "Torre Negra",
+                    Author = "Stephen King",
+                    Publishing = "Universal",
+                    Year = 1995,
+                    Category = Categories.LiteraturaEstrangeira,
+                    Stock = 5,
+                    Price = 150.0M,
+                    Photo = "",
+                    Status = ProductStatus.Active
+                };
+
+                var novoLivro2 = new Product
+                    {
+                        Name = "Torre Negra Volume 2",
+                        Author = "Stephen King",
+                        Publishing = "Universal",
+                        Year = 1998,
+                        Category = Categories.LiteraturaEstrangeira,
+                        Stock = 8,
+                        Price = 170.0M,
+                        Photo = "",
+                        Status = ProductStatus.Inative
+                    };
+
+                livrariaContext.Products.Add(novoLivro);
+                livrariaContext.Products.Add(novoLivro2);
+                livrariaContext.SaveChanges();
+            }
+
+            var mockContext = new LivrariaTDDContext();
+
+            _repository = new ProdutoRepository(mockContext);
+
+            var result = _repository.GetActiveProducts();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, mockContext.Products.Count());
+            Assert.AreEqual(2, result.Count);
+            Assert.IsInstanceOf<List<Product>>(result);
             CollectionAssert.AllItemsAreNotNull(result);
             CollectionAssert.IsNotEmpty(result);
         }

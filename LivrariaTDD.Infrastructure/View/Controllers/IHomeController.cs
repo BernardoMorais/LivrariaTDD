@@ -2,8 +2,8 @@ using System.Web.Mvc;
 
 namespace LivrariaTDD.Infrastructure.View.Controllers
 {
-    public interface IHomeController : IController
+    public interface IHomeController
     {
-        RedirectToRouteResult Index();
+        ActionResult Index();
     }
 }

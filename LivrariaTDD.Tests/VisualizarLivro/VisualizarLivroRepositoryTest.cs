@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
-using LivrariaTDD.DAL.Models;
+﻿using System.Linq;
+using LivrariaTDD.DAL.Context;
 using LivrariaTDD.DAL.Repositories;
-using LivrariaTDD.Infrastructure.DAL.Context;
 using LivrariaTDD.Infrastructure.DAL.Repository;
+using LivrariaTDD.Infrastructure.Enums;
 using LivrariaTDD.Infrastructure.Models;
-using Moq;
 using NUnit.Framework;
 
 namespace LivrariaTDD.MVCTests.VisualizarLivro
@@ -13,74 +11,73 @@ namespace LivrariaTDD.MVCTests.VisualizarLivro
     [TestFixture]
     public class VisualizarLivroRepositoryTest
     {
-        private IProdutoRepository _repository;
-        private EnumerableQuery<IProduto> _listaDeProdutos;
-        private Produto _livroTDD;
-        private Produto _livroRomance;
-        private Produto _livroFiccao;
+        private IProductRepository _repository;
+        private Product _livroTDD;
+        private Product _livroRomance;
+        private Product _livroFiccao;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
-            _livroTDD = new Produto
+            _livroTDD = new Product
             {
-                IdProduto = 1,
-                Nome = "TDD desenvolvimento guiado por testes",
-                Autor = "Kent Beck",
-                Editora = "Bookman",
-                Ano = 2010,
-                Categoria = "Engenharia de Software",
-                Estoque = 0,
-                Preco = 50.0M,
-                Foto = ""
+                ProductId = 1,
+                Name = "TDD desenvolvimento guiado por testes",
+                Author = "Kent Beck",
+                Publishing = "Bookman",
+                Year = 2010,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 0,
+                Price = 50.0M,
+                Photo = ""
             };
 
-            _livroRomance = new Produto
+            _livroRomance = new Product
             {
-                IdProduto = 2,
-                Nome = "O Amor",
-                Autor = "Escritora Romance",
-                Editora = "Bookman",
-                Ano = 2007,
-                Categoria = "Ficção",
-                Estoque = 0,
-                Preco = 30.0M,
-                Foto = ""
+                ProductId = 2,
+                Name = "O Amor",
+                Author = "Escritora Romance",
+                Publishing = "Bookman",
+                Year = 2007,
+                Category = Categories.LiteraturaBrasileira,
+                Stock = 0,
+                Price = 30.0M,
+                Photo = ""
             };
 
-            _livroFiccao = new Produto
+            _livroFiccao = new Product
             {
-                IdProduto = 3,
-                Nome = "O Senhor Dos Aneis",
-                Autor = "Tolken J.R.",
-                Editora = "Abril",
-                Ano = 2005,
-                Categoria = "Ficção",
-                Estoque = 0,
-                Preco = 100.0M,
-                Foto = ""
+                ProductId = 3,
+                Name = "O Senhor Dos Aneis",
+                Author = "Tolken J.R.",
+                Publishing = "Abril",
+                Year = 2005,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 0,
+                Price = 100.0M,
+                Photo = ""
             };
 
-            _listaDeProdutos = new EnumerableQuery<IProduto>(new[]
-                {
-                    _livroTDD,_livroRomance,_livroFiccao
-                });
+            using (var db = new LivrariaTDDContext())
+            {
+                _livroTDD = db.Products.Add(_livroTDD);
+                _livroRomance = db.Products.Add(_livroRomance);
+                _livroFiccao = db.Products.Add(_livroFiccao);
+                db.SaveChanges();
+            }
         }
 
-        [Test]
-        public void AoAcessarACamadaDeAcessoADadosDaPaginaDeVisualizacaoDeProduto_OProdutoDeveVirDaDoFrameworkDeORM()
+        [TestFixtureTearDown]
+        public void TearDown()
         {
-            const int id = 1;
-
-            var mockContext = new Mock<ILivrariaTDDContext>();
-
-            mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
-
-            _repository = new ProdutoRepository(mockContext.Object);
-
-            _repository.RecuperarInformacoesDoLivro(id);
-
-            mockContext.Verify(x => x.Produtos, Times.AtLeastOnce());
+            using (var db = new LivrariaTDDContext())
+            {
+                foreach(var item in db.Products.ToList())
+                {
+                    db.Products.Remove(item);
+                }
+                db.SaveChanges();
+            }
         }
 
         [Test]
@@ -88,104 +85,80 @@ namespace LivrariaTDD.MVCTests.VisualizarLivro
         {
             const int id = 1;
 
-            var mockContext = new Mock<ILivrariaTDDContext>();
+            var mockContext = new LivrariaTDDContext("server=./SQLServerStringErrada");
 
-            mockContext.Setup(x => x.Produtos).Throws<Exception>();
+            //mockContext.Setup(x => x.Produtos).Throws<Exception>();
 
-            _repository = new ProdutoRepository(mockContext.Object);
+            _repository = new ProdutoRepository(mockContext);
 
-            Assert.Throws<Exception>(() => _repository.RecuperarInformacoesDoLivro(id));
+            Assert.Throws<System.Data.DataException>(() => _repository.RecuperarInformacoesDoLivro(id));
         }
 
         [Test]
         public void AoAcessarACamadaDeNegociosDaPaginaDeVisualizacaoDeLivro_OProdutoDeveSerRetornado()
         {
-            const int id = 1;
+            var mockContext = new LivrariaTDDContext();
 
-            var mockContext = new Mock<ILivrariaTDDContext>();
+            //mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
 
-            mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
+            _repository = new ProdutoRepository(mockContext);
 
-            _repository = new ProdutoRepository(mockContext.Object);
-
-            var result = _repository.RecuperarInformacoesDoLivro(id);
+            var result = _repository.RecuperarInformacoesDoLivro(_livroFiccao.ProductId);
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf<IProduto>(result);
-            Assert.AreEqual(result.IdProduto, id);
+            Assert.IsInstanceOf<Product>(result);
+            Assert.AreEqual(result.ProductId, _livroFiccao.ProductId);
         }
 
         [Test]
-        public void AoAcessarACamdadaDeAcessoADadosParaAlterarUmProduto_OProdutoDeveAcessarOFrameworkDeORM()
+        public void AoAcessarACamdadaDeAcessoADadosParaAlterarUmProduto_OProdutoDeveSerSalvoEUmResultadoBooleYearDeveSerRetornado()
         {
-            var novosValores = new Produto
+            var novosValores = new Product
             {
-                IdProduto = 3,
-                Nome = "A Bela e a Fera",
-                Autor = "Popular",
-                Editora = "Abril",
-                Ano = 2005,
-                Categoria = "Infantil",
-                Estoque = 10,
-                Preco = 10.0M,
-                Foto = ""
+                ProductId = 3,
+                Name = "Cinderela",
+                Author = "Popular",
+                Publishing = "Abril",
+                Year = 2005,
+                Category = Categories.InfantoJuvenis,
+                Stock = 10,
+                Price = 10.0M,
+                Photo = ""
             };
 
-            var mockContext = new Mock<ILivrariaTDDContext>();
+            var mockContext = new LivrariaTDDContext();
 
-            mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
+            novosValores = mockContext.Products.Add(novosValores);
+            mockContext.SaveChanges();
 
-            _repository = new ProdutoRepository(mockContext.Object);
+            //mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
 
-            _repository.AlterarLivro(novosValores.IdProduto, novosValores.Nome, novosValores.Autor, novosValores.Editora, novosValores.Ano, novosValores.Categoria, novosValores.Estoque, novosValores.Preco, novosValores.Foto);
+            _repository = new ProdutoRepository(mockContext);
 
-            mockContext.Verify(x => x.Produtos, Times.AtLeastOnce());
-        }
+            var aux = _repository.RecuperarInformacoesDoLivro(novosValores.ProductId);
 
-        [Test]
-        public void AoAcessarACamdadaDeAcessoADadosParaAlterarUmProduto_OProdutoDeveSerSalvoEUmResultadoBooleanoDeveSerRetornado()
-        {
-            var novosValores = new Produto
-            {
-                IdProduto = 3,
-                Nome = "Cinderela",
-                Autor = "Popular",
-                Editora = "Abril",
-                Ano = 2005,
-                Categoria = "Infantil",
-                Estoque = 10,
-                Preco = 10.0M,
-                Foto = ""
-            };
-
-            var mockContext = new Mock<ILivrariaTDDContext>();
-
-            mockContext.Setup(x => x.Produtos).Returns(_listaDeProdutos);
-
-            _repository = new ProdutoRepository(mockContext.Object);
-
-            var aux = _repository.RecuperarInformacoesDoLivro(novosValores.IdProduto);
-
-            var livroAntigo = new Produto
+            var livroAntigo = new Product
                 {
-                    IdProduto = aux.IdProduto,
-                    Nome = aux.Nome,
-                    Autor = aux.Autor,
-                    Editora = aux.Editora,
-                    Ano = aux.Ano,
-                    Categoria = aux.Categoria,
-                    Estoque = aux.Estoque,
-                    Preco = aux.Preco,
-                    Foto = aux.Foto
+                    ProductId = aux.ProductId,
+                    Name = aux.Name,
+                    Author = aux.Author,
+                    Publishing = aux.Publishing,
+                    Year = aux.Year,
+                    Category = aux.Category,
+                    Stock = aux.Stock,
+                    Price = aux.Price,
+                    Photo = aux.Photo
                 };
 
-            var result = _repository.AlterarLivro(novosValores.IdProduto, novosValores.Nome, novosValores.Autor, novosValores.Editora, novosValores.Ano, novosValores.Categoria, novosValores.Estoque, novosValores.Preco, novosValores.Foto);
+            novosValores.Name = "Name novo";
 
-            var livroNovo = _repository.RecuperarInformacoesDoLivro(novosValores.IdProduto);
+            var result = _repository.AlterarLivro(novosValores);
+
+            var livroNovo = _repository.RecuperarInformacoesDoLivro(novosValores.ProductId);
 
             Assert.True(result);
-            Assert.AreEqual(livroAntigo.IdProduto, livroNovo.IdProduto);
-            StringAssert.AreNotEqualIgnoringCase(livroAntigo.Nome, livroNovo.Nome);
+            Assert.AreEqual(livroAntigo.ProductId, livroNovo.ProductId);
+            StringAssert.AreNotEqualIgnoringCase(livroAntigo.Name, livroNovo.Name);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using LivrariaTDD.BRL.Livro;
-using LivrariaTDD.Infrastructure.BRL.Livro;
+using LivrariaTDD.Infrastructure.BRL.Product;
 
 namespace LivrariaTDD.DependencyInjection.Modules
 {
@@ -7,7 +7,7 @@ namespace LivrariaTDD.DependencyInjection.Modules
     {
         public override void Load()
         {
-            Bind<ILivroBusiness>().To<LivroBusiness>();
+            Bind<IProductBusiness>().To<ProductBusiness>();
         }
     }
 }

@@ -1,104 +1,100 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using LivrariaTDD.Controllers.Livros;
-using LivrariaTDD.Infrastructure.BRL.Livro;
-using LivrariaTDD.Infrastructure.Models;
-using LivrariaTDD.Models;
+using System.Web.Mvc;
+using LivrariaTDD.Controllers.Home;
+using LivrariaTDD.Infrastructure.BRL.Product;
+using LivrariaTDD.Infrastructure.Enums;
+using LivrariaTDD.Models.Product;
 using Moq;
 using NUnit.Framework;
+using Product = LivrariaTDD.Infrastructure.Models.Product;
 
 namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 {
     [TestFixture]
-    public class LivroControllerTest
+    public class HomeControllerTest
     {
-        private LivroController _controller;
-        private Mock<ILivroBusiness> _business;        
-        private List<IProduto> _listagemDeProdutosEntity;
-        private DAL.Models.Produto _livroTDD;
-        private DAL.Models.Produto _livroRomance;
-        private DAL.Models.Produto _livroFiccao;
+        private HomeController _controller;
+        private Mock<IProductBusiness> _business;
+        private List<Product> _listagemDeProdutosEntity;
+        private Product _livroTDD;
+        private Product _livroRomance;
+        private Product _livroFiccao;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
-            _livroTDD = new DAL.Models.Produto
+            _livroTDD = new Product
                 {
-                    IdProduto = 1,
-                    Nome = "TDD desenvolvimento guiado por testes",
-                    Autor = "Kent Beck",
-                    Editora = "Bookman",
-                    Ano = 2010,
-                    Categoria = "Engenharia de Software",
-                    Estoque = 0,
-                    Preco = 50.0M,
-                    Foto = ""
+                    ProductId = 1,
+                    Name = "TDD desenvolvimento guiado por testes",
+                    Author = "Kent Beck",
+                    Publishing = "Bookman",
+                    Year = 2010,
+                    Category = Categories.LiteraturaEstrangeira,
+                    Stock = 0,
+                    Price = 50.0M,
+                    Photo = ""
                 };
 
-            _livroRomance = new DAL.Models.Produto
+            _livroRomance = new Product
             {
-                IdProduto = 2,
-                Nome = "O Amor",
-                Autor = "Escritora Romance",
-                Editora = "Bookman",
-                Ano = 2007,
-                Categoria = "Ficção",
-                Estoque = 0,
-                Preco = 30.0M,
-                Foto = ""
+                ProductId = 2,
+                Name = "O Amor",
+                Author = "Escritora Romance",
+                Publishing = "Bookman",
+                Year = 2007,
+                Category = Categories.LiteraturaBrasileira,
+                Stock = 0,
+                Price = 30.0M,
+                Photo = ""
             };
 
-            _livroFiccao = new DAL.Models.Produto
+            _livroFiccao = new Product
             {
-                IdProduto = 3,
-                Nome = "O Senhor Dos Aneis",
-                Autor = "Tolken J.R.",
-                Editora = "Abril",
-                Ano = 2005,
-                Categoria = "Ficção",
-                Estoque = 0,
-                Preco = 100.0M,
-                Foto = ""
+                ProductId = 3,
+                Name = "O Senhor Dos Aneis",
+                Author = "Tolken J.R.",
+                Publishing = "Abril",
+                Year = 2005,
+                Category = Categories.LiteraturaEstrangeira,
+                Stock = 0,
+                Price = 100.0M,
+                Photo = ""
             };
 
-            _listagemDeProdutosEntity = new List<IProduto>
+            _listagemDeProdutosEntity = new List<Product>
                 {
                   _livroTDD, _livroRomance, _livroFiccao  
                 };
 
 
 
-            _business = new Mock<ILivroBusiness>();
-            _business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
-            _controller = new LivroController(_business.Object);
+            _business = new Mock<IProductBusiness>();
+            _business.Setup(x => x.GetActiveProducts()).Returns(_listagemDeProdutosEntity);
+            _controller = new HomeController(_business.Object);
         }
 
         #region US1
 
         [Test]
-        public void QuandoAcessoAPagina_ComoFuncionarioDaLoja_APaginaEstaAcessivel()
+        public void QuandoAcessoAPagina_APaginaEstarAcessivel()
         {
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            Assert.AreEqual("ListagemDeProdutos", result.ViewName);
+            Assert.NotNull(result);
+            Assert.AreEqual("Index", result.ViewName);
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_APaginaDevePossuirAListagemDeProdutos()
+        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirName()
         {
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
-        }
+            Assert.NotNull(result);
 
-        [Test]
-        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirNome()
-        {
-            var result = _controller.Index();
-
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -106,16 +102,18 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsNotEmpty(produto.Nome);
+                Assert.IsFalse(String.IsNullOrEmpty(produto.Name));
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirAutor()
+        public void AoAcessarAPaginaDeListagem_OsProdutosDevemPossuirAuthor()
         {
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -123,16 +121,18 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsNotEmpty(produto.Autor);
+                Assert.IsNotEmpty(produto.Author);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirEditora()
+        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirPublishing()
         {
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -140,16 +140,18 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsNotEmpty(produto.Editora);
+                Assert.IsNotEmpty(produto.Publishing);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirAnoEDeveSerMaiorDoQueZero()
+        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirYearEDeveSerMaiorDoQueZero()
         {
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -157,16 +159,16 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsTrue(produto.Ano > 0);
+                Assert.IsTrue(produto.Year > 0);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirCategoria()
+        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirCategory()
         {
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -174,16 +176,18 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsNotEmpty(produto.Categoria);
+                Assert.IsNotNull(produto.Category);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirEstoqueENaoDeveSerNegativo()
+        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirStockENaoDeveSerNegativo()
         {
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -191,16 +195,18 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsTrue(produto.Estoque >= 0);
+                Assert.IsTrue(produto.Stock >= 0);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirPrecoEDeveSerMaiorDoQueZero()
+        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemPossuirPriceEDeveSerMaiorDoQueZero()
         {
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -208,367 +214,108 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsTrue(produto.Preco > 0);
+                Assert.IsTrue(produto.Price > 0);
             }
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagem_ComoFuncionarioDaLoja_OsProdutosDevemVirDaCamadaDeNegocios()
-        {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
-
-            _controller = new LivroController(business.Object);
-
-            _controller.Index();
-
-            business.Verify(x => x.RecuperarTodosProdutos(), Times.AtLeastOnce());
         }
 
         [Test]
         public void AoAcessarAPaginaDeListagemEOcorrerUmaExcecaoNaCamadaDeNegocios_ComoFuncionarioDaLoja_OSistemaDeveNotificarAoUsuario()
         {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Throws<Exception>();
+            var business = new Mock<IProductBusiness>();
+            business.Setup(x => x.GetActiveProducts()).Throws<Exception>();
 
-            _controller = new LivroController(business.Object);
+            _controller = new HomeController(business.Object);
 
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            Assert.Contains("Erro", result.ViewData.Keys as ICollection);            
-            StringAssert.AreEqualIgnoringCase("Ocorreu um erro durante o processamento. Tente novamente mais tarde.", result.ViewData["Erro"] as string);
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutos_ComoFuncionarioDaLoja_OsProdutosEnviadosParaTelaDevemSerObjetosDoProjetoMVC()
-        {
-            var result = _controller.Index();
-
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoCliente_DeveRetornarOTipoDeUsuarioParaPagina()
-        {
-            _controller = new LivroController(_business.Object);
-            var result = _controller.Index(true, "Cliente", "");
-            Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);        
-            StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "Cliente");
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoCliente_DeveRetornarQueExisteUsuarioLogado()
-        {
-            _controller = new LivroController(_business.Object);
-            var result = _controller.Index(true, "Cliente", "");
-            Assert.Contains("logado", result.ViewData.Keys as ICollection);
-            Assert.True((bool)result.ViewData["logado"]);
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoCliente_NaoDeveRetornarErroNaPagina()
-        {
-            _controller = new LivroController(_business.Object);
-            var result = _controller.Index(true, "Cliente", "");
-            Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
-            StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "");
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoCliente_NaoDeveRetornarOTipoDeUsuarioParaPagina()
-        {
-            var result = _controller.Index(false, "", "Dados do usuário inválidos.");
-            Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);
-            StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "");
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoCliente_DeveRetornarQueNaoExisteUsuarioLogado()
-        {
-            _controller = new LivroController(_business.Object);
-            var result = _controller.Index(false, "", "Dados do usuário inválidos.");
-            Assert.Contains("logado", result.ViewData.Keys as ICollection);
-            Assert.False((bool)result.ViewData["logado"]);
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoCliente_DeveRetornarUmErroParaPagina()
-        {
-            _controller = new LivroController(_business.Object);
-            var result = _controller.Index(false, "", "Dados do usuário inválidos.");
-            Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
-            StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "Dados do usuário inválidos.");
-        }
-
-        [Test]
-        public void QuandoAcessoAPaginaLogado_ComoCliente_APaginaEstaAcessivel()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
-
-            Assert.AreEqual("ListagemDeProdutos", result.ViewName);
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoCliente_APaginaDevePossuirAListagemDeProdutos()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
-
-            Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirNome()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
-
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
-
-            Assert.IsNotNull(list);
-
-            Assert.IsNotEmpty(list);
-
-            foreach (var produto in list)
-            {
-                Assert.IsNotEmpty(produto.Nome);
-            }
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirAutor()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
-
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
-
-            Assert.IsNotNull(list);
-
-            Assert.IsNotEmpty(list);
-
-            foreach (var produto in list)
-            {
-                Assert.IsNotEmpty(produto.Autor);
-            }
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirEditora()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
-
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
-
-            Assert.IsNotNull(list);
-
-            Assert.IsNotEmpty(list);
-
-            foreach (var produto in list)
-            {
-                Assert.IsNotEmpty(produto.Editora);
-            }
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirAnoEDeveSerMaiorDoQueZero()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
-
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
-
-            Assert.IsNotNull(list);
-
-            Assert.IsNotEmpty(list);
-
-            foreach (var produto in list)
-            {
-                Assert.IsTrue(produto.Ano > 0);
-            }
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirCategoria()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
-
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
-
-            Assert.IsNotNull(list);
-
-            Assert.IsNotEmpty(list);
-
-            foreach (var produto in list)
-            {
-                Assert.IsNotEmpty(produto.Categoria);
-            }
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirEstoqueENaoDeveSerNegativo()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
-
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
-
-            Assert.IsNotNull(list);
-
-            Assert.IsNotEmpty(list);
-
-            foreach (var produto in list)
-            {
-                Assert.IsTrue(produto.Estoque >= 0);
-            }
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemPossuirPrecoEDeveSerMaiorDoQueZero()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
-
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
-
-            Assert.IsNotNull(list);
-
-            Assert.IsNotEmpty(list);
-
-            foreach (var produto in list)
-            {
-                Assert.IsTrue(produto.Preco > 0);
-            }
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoCliente_OsProdutosDevemVirDaCamadaDeNegocios()
-        {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
-
-            _controller = new LivroController(business.Object);
-
-            _controller.Index(true, "Cliente", "");
-
-            business.Verify(x => x.RecuperarTodosProdutos(), Times.AtLeastOnce());
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemEOcorrerUmaExcecaoNaCamadaDeNegociosLogado_ComoCliente_OSistemaDeveNotificarAoUsuario()
-        {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Throws<Exception>();
-
-            _controller = new LivroController(business.Object);
-
-            var result = _controller.Index(true, "Cliente", "");
+            Assert.NotNull(result); 
 
             Assert.Contains("Erro", result.ViewData.Keys as ICollection);
             StringAssert.AreEqualIgnoringCase("Ocorreu um erro durante o processamento. Tente novamente mais tarde.", result.ViewData["Erro"] as string);
         }
 
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoCliente_OsProdutosEnviadosParaTelaDevemSerObjetosDoProjetoMVC()
-        {
-            var result = _controller.Index(true, "Cliente", "");
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutos_DeveRetornarOTipoDeUsuarioParaPagina()
+        //{
+        //    _controller = new HomeController(_business.Object);
+        //    var result = _controller.Entrar(true, "Cliente", "");
+        //    Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);        
+        //    StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "Cliente");
+        //}
 
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
-        }
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutos_DeveRetornarQueExisteUsuarioLogado()
+        //{
+        //    _controller = new HomeController(_business.Object);
+        //    var result = _controller.Entrar(true, "Cliente", "");
+        //    Assert.Contains("logado", result.ViewData.Keys as ICollection);
+        //    Assert.True((bool)result.ViewData["logado"]);
+        //}
 
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoFuncionarioDaLoja_DeveRetornarOTipoDeUsuarioParaPagina()
-        {
-            _controller = new LivroController(_business.Object);
-            var result = _controller.Index(true, "Funcionario", "");
-            Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);
-            StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "Funcionario");
-        }
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutos_NaoDeveRetornarErroNaPagina()
+        //{
+        //    _controller = new HomeController(_business.Object);
+        //    var result = _controller.Entrar(true, "Cliente", "");
+        //    Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
+        //    StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "");
+        //}
 
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoFuncionarioDaLoja_DeveRetornarQueExisteUsuarioLogado()
-        {
-            _controller = new LivroController(_business.Object);
-            var result = _controller.Index(true, "Funcionario", "");
-            Assert.Contains("logado", result.ViewData.Keys as ICollection);
-            Assert.True((bool)result.ViewData["logado"]);
-        }
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoCliente_NaoDeveRetornarOTipoDeUsuarioParaPagina()
+        //{
+        //    var result = _controller.Entrar(false, "", "Dados do usuário inválidos.");
+        //    Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);
+        //    StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "");
+        //}
 
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoFuncionarioDaLoja_NaoDeveRetornarErroNaPagina()
-        {
-            _controller = new LivroController(_business.Object);
-            var result = _controller.Index(true, "Funcionario", "");
-            Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
-            StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "");
-        }
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoCliente_DeveRetornarQueNaoExisteUsuarioLogado()
+        //{
+        //    _controller = new HomeController(_business.Object);
+        //    var result = _controller.Entrar(false, "", "Dados do usuário inválidos.");
+        //    Assert.Contains("logado", result.ViewData.Keys as ICollection);
+        //    Assert.False((bool)result.ViewData["logado"]);
+        //}
 
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoFuncionarioDaLoja_NaoDeveRetornarOTipoDeUsuarioParaPagina()
-        {
-            var result = _controller.Index(false, "", "Dados do usuário inválidos.");
-            Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);
-            StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "");
-        }
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoCliente_DeveRetornarUmErroParaPagina()
+        //{
+        //    _controller = new HomeController(_business.Object);
+        //    var result = _controller.Entrar(false, "", "Dados do usuário inválidos.");
+        //    Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
+        //    StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "Dados do usuário inválidos.");
+        //}
 
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoFuncionarioDaLoja_DeveRetornarQueNaoExisteUsuarioLogado()
-        {
-            var result = _controller.Index(false, "", "Dados do usuário inválidos.");
-            Assert.Contains("logado", result.ViewData.Keys as ICollection);
-            Assert.False((bool)result.ViewData["logado"]);
-        }
+        //[Test]
+        //public void QuandoAcessoAPagina_APaginaEstaAcessivel()
+        //{
+        //    _controller = new HomeController(_business.Object);
 
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoFuncionarioDaLoja_DeveRetornarUmErroParaPagina()
-        {
-            var result = _controller.Index(false, "", "Dados do usuário inválidos.");
-            Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
-            StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "Dados do usuário inválidos.");
-        }
+        //    var result = _controller.Entrar(true, "Cliente", "");
 
-        [Test]
-        public void QuandoAcessoAPaginaLogado_ComoFuncionarioDaLoja_APaginaEstaAcessivel()
-        {
-            _controller = new LivroController(_business.Object);
+        //    Assert.AreEqual("ListagemDeProdutos", result.ViewName);
+        //}
 
-            var result = _controller.Index(true, "Funcionario", "");
+        //[Test]
+        //public void AoAcessarAPaginaDeListagem_APaginaDevePossuirAListagemDeProdutos()
+        //{
+        //    _controller = new HomeController(_business.Object);
 
-            Assert.AreEqual("ListagemDeProdutos", result.ViewName);
-        }
+        //    var result = _controller.Entrar(true, "Cliente", "");
 
-        [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_APaginaDevePossuirAListagemDeProdutos()
-        {
-            _controller = new LivroController(_business.Object);
-
-            var result = _controller.Index(true, "Funcionario", "");
-
-            Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
-        }
+        //    Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
+        //    Assert.IsInstanceOf<List<Models.Product.Product>>(result.ViewData["ListagemDeProdutos"]);
+        //}
 
         [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirNome()
+        public void AoAcessarAPaginaDeListagem_OsProdutosDevemPossuirName()
         {
-            _controller = new LivroController(_business.Object);
+            _controller = new HomeController(_business.Object);
 
-            var result = _controller.Index(true, "Funcionario", "");
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -576,18 +323,20 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsNotEmpty(produto.Nome);
+                Assert.IsNotEmpty(produto.Name);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirAutor()
+        public void AoAcessarAPaginaDeListagem_OsProdutosDevemPossuirPublishing()
         {
-            _controller = new LivroController(_business.Object);
+            _controller = new HomeController(_business.Object);
 
-            var result = _controller.Index(true, "Funcionario", "");
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -595,18 +344,20 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsNotEmpty(produto.Autor);
+                Assert.IsNotEmpty(produto.Publishing);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirEditora()
+        public void AoAcessarAPaginaDeListagem_OsProdutosDevemPossuirYearEDeveSerMaiorDoQueZero()
         {
-            _controller = new LivroController(_business.Object);
+            _controller = new HomeController(_business.Object);
 
-            var result = _controller.Index(true, "Funcionario", "");
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -614,18 +365,20 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsNotEmpty(produto.Editora);
+                Assert.IsTrue(produto.Year > 0);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirAnoEDeveSerMaiorDoQueZero()
+        public void AoAcessarAPaginaDeListagem_OsProdutosDevemPossuirCategory()
         {
-            _controller = new LivroController(_business.Object);
+            _controller = new HomeController(_business.Object);
 
-            var result = _controller.Index(true, "Funcionario", "");
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -633,18 +386,20 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsTrue(produto.Ano > 0);
+                Assert.IsNotNull(produto.Category);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirCategoria()
+        public void AoAcessarAPaginaDeListagem_OsProdutosDevemPossuirStockENaoDeveSerNegativo()
         {
-            _controller = new LivroController(_business.Object);
+            _controller = new HomeController(_business.Object);
 
-            var result = _controller.Index(true, "Funcionario", "");
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -652,18 +407,20 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsNotEmpty(produto.Categoria);
+                Assert.IsTrue(produto.Stock >= 0);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirEstoqueENaoDeveSerNegativo()
+        public void AoAcessarAPaginaDeListagem_OsProdutosDevemPossuirPriceEDeveSerMaiorDoQueZero()
         {
-            _controller = new LivroController(_business.Object);
+            _controller = new HomeController(_business.Object);
 
-            var result = _controller.Index(true, "Funcionario", "");
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); 
+
+            var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -671,157 +428,184 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsTrue(produto.Estoque >= 0);
+                Assert.IsTrue(produto.Price > 0);
             }
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemPossuirPrecoEDeveSerMaiorDoQueZero()
+        public void AoAcessarAPaginaDeListagem_OsProdutosDevemVirDaCamadaDeNegocios()
         {
-            _controller = new LivroController(_business.Object);
+            var business = new Mock<IProductBusiness>();
+            business.Setup(x => x.GetActiveProducts()).Returns(_listagemDeProdutosEntity);
 
-            var result = _controller.Index(true, "Funcionario", "");
+            _controller = new HomeController(business.Object);
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            _controller.Index();
 
-            Assert.IsNotNull(list);
-
-            Assert.IsNotEmpty(list);
-
-            foreach (var produto in list)
-            {
-                Assert.IsTrue(produto.Preco > 0);
-            }
+            business.Verify(x => x.GetActiveProducts(), Times.AtLeastOnce());
         }
 
         [Test]
-        public void AoAcessarAPaginaDeListagemLogado_ComoFuncionarioDaLoja_OsProdutosDevemVirDaCamadaDeNegocios()
+        public void AoAcessarAPaginaDeListagemEOcorrerUmaExcecaoNaCamadaDeNegocios_OSistemaDeveNotificarAoUsuario()
         {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
+            var business = new Mock<IProductBusiness>();
+            business.Setup(x => x.GetActiveProducts()).Throws<Exception>();
 
-            _controller = new LivroController(business.Object);
+            _controller = new HomeController(business.Object);
 
-            _controller.Index(true, "Funcionario", "");
+            var result = _controller.Index() as ViewResult;
 
-            business.Verify(x => x.RecuperarTodosProdutos(), Times.AtLeastOnce());
-        }
-
-        [Test]
-        public void AoAcessarAPaginaDeListagemEOcorrerUmaExcecaoNaCamadaDeNegociosLogado_ComoFuncionarioDaLoja_OSistemaDeveNotificarAoUsuario()
-        {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Throws<Exception>();
-
-            _controller = new LivroController(business.Object);
-
-            var result = _controller.Index(true, "Funcionario", "");
+            Assert.NotNull(result); 
 
             Assert.Contains("Erro", result.ViewData.Keys as ICollection);
             StringAssert.AreEqualIgnoringCase("Ocorreu um erro durante o processamento. Tente novamente mais tarde.", result.ViewData["Erro"] as string);
         }
 
-        [Test]
-        public void AoAcessarAPaginaDeListagemDeProdutosLogado_ComoFuncionarioDaLoja_OsProdutosEnviadosParaTelaDevemSerObjetosDoProjetoMVC()
-        {
-            var result = _controller.Index(true, "Funcionario", "");
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutos_DeveRetornarOTipoDeUsuarioParaPagina()
+        //{
+        //    _controller = new HomeController(_business.Object);
+        //    var result = _controller.Entrar(true, "Funcionario", "");
+        //    Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);
+        //    StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "Funcionario");
+        //}
 
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutos_DeveRetornarQueExisteUsuarioLogado()
+        //{
+        //    _controller = new HomeController(_business.Object);
+        //    var result = _controller.Entrar(true, "Funcionario", "");
+        //    Assert.Contains("logado", result.ViewData.Keys as ICollection);
+        //    Assert.True((bool)result.ViewData["logado"]);
+        //}
+
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutos_NaoDeveRetornarErroNaPagina()
+        //{
+        //    _controller = new HomeController(_business.Object);
+        //    var result = _controller.Entrar(true, "Funcionario", "");
+        //    Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
+        //    StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "");
+        //}
+
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoFuncionarioDaLoja_NaoDeveRetornarOTipoDeUsuarioParaPagina()
+        //{
+        //    var result = _controller.Entrar(false, "", "Dados do usuário inválidos.");
+        //    Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);
+        //    StringAssert.AreEqualIgnoringCase((string)result.ViewData["tipoUsuario"], "");
+        //}
+
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoFuncionarioDaLoja_DeveRetornarQueNaoExisteUsuarioLogado()
+        //{
+        //    var result = _controller.Entrar(false, "", "Dados do usuário inválidos.");
+        //    Assert.Contains("logado", result.ViewData.Keys as ICollection);
+        //    Assert.False((bool)result.ViewData["logado"]);
+        //}
+
+        //[Test]
+        //public void AoAcessarAPaginaDeListagemDeProdutosComSenhaDadosIncorretos_ComoFuncionarioDaLoja_DeveRetornarUmErroParaPagina()
+        //{
+        //    var result = _controller.Entrar(false, "", "Dados do usuário inválidos.");
+        //    Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
+        //    StringAssert.AreEqualIgnoringCase((string)result.ViewData["erroLogin"], "Dados do usuário inválidos.");
+        //}
+
+        //[Test]
+        //public void QuandoAcessoAPagina_APaginaEstaAcessivel()
+        //{
+        //    _controller = new HomeController(_business.Object);
+
+        //    var result = _controller.Entrar(true, "Funcionario", "");
+
+        //    Assert.AreEqual("ListagemDeProdutos", result.ViewName);
+        //}
+
+        [Test]
+        public void AoAcessarAPaginaDeListagem_APaginaDevePossuirAListagemDeProdutos()
+        {
+            _controller = new HomeController(_business.Object);
+
+            var result = _controller.Index() as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.IsInstanceOf<ProductList>(result.Model);
         }
-        
+
         #endregion
 
         #region US2
 
         [Test]
-        public void QuandoUsuarioFiltarAListaPeloNome_OControleDeveRetornarSomenteOsLivrosComNomesCorrepondentes()
+        public void QuandoUsuarioFiltarAListaPeloName_OControleDeveRetornarSomenteOsLivrosComNamesCorrepondentes()
         {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
+            var business = new Mock<IProductBusiness>();
+            business.Setup(x => x.GetActiveProducts()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new LivroController(business.Object);
+            _controller = new HomeController(business.Object);
 
-            var result = _controller.PesquisaProduto("TDD", "");
+            var result = _controller.Search("TDD", null);
 
-            var lista = (List<ProdutoModel>) result.ViewData["ListagemDeProdutos"];
+            var lista = ((ProductList)result.Model).Products;
 
-            Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
-            StringAssert.AreEqualIgnoringCase(lista[0].Nome, _livroTDD.Nome);
+            Assert.IsInstanceOf<ProductList>(result.Model);
+            StringAssert.AreEqualIgnoringCase(lista[0].Name, _livroTDD.Name);
             Assert.AreEqual(lista.Count, 1);
         }
 
         [Test]
-        public void QuandoUsuarioFiltarAListaPelaCategoria_OControleDeveRetornarSomenteOsLivrosComCategoriasCorrepondentes()
+        public void QuandoUsuarioFiltarAListaPelaCategory_OControleDeveRetornarSomenteOsLivrosComCategorysCorrepondentes()
         {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
+            var business = new Mock<IProductBusiness>();
+            business.Setup(x => x.GetActiveProducts()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new LivroController(business.Object);
+            _controller = new HomeController(business.Object);
 
-            var result = _controller.PesquisaProduto("", "Ficção");
+            var result = _controller.Search("", Categories.LiteraturaEstrangeira);
 
-            var lista = (List<ProdutoModel>)result.ViewData["ListagemDeProdutos"];
+            var lista = ((ProductList)result.Model).Products;
 
-            Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
-            StringAssert.AreEqualIgnoringCase(lista[0].Nome, _livroRomance.Nome);
-            StringAssert.AreEqualIgnoringCase(lista[1].Nome, _livroFiccao.Nome);
+            Assert.IsInstanceOf<ProductList>(result.Model);
+            StringAssert.AreEqualIgnoringCase(lista[0].Name, _livroTDD.Name);
+            StringAssert.AreEqualIgnoringCase(lista[1].Name, _livroFiccao.Name);
             Assert.AreEqual(lista.Count, 2);
         }
 
         [Test]
-        public void QuandoUsuarioFiltarAListaPeloNomeECategoria_OControleDeveRetornarSomenteOsLivrosComNomesECategoriaCorrepondentes()
+        public void QuandoUsuarioFiltarAListaPeloNameECategory_OControleDeveRetornarSomenteOsLivrosComNamesECategoryCorrepondentes()
         {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
+            var business = new Mock<IProductBusiness>();
+            business.Setup(x => x.GetActiveProducts()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new LivroController(business.Object);
+            _controller = new HomeController(business.Object);
 
-            var result = _controller.PesquisaProduto("Aneis","Ficção");
+            var result = _controller.Search("Aneis", Categories.LiteraturaEstrangeira);
 
-            var lista = (List<ProdutoModel>)result.ViewData["ListagemDeProdutos"];
+            var lista = ((ProductList)result.Model).Products;
 
-            Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
-            StringAssert.AreEqualIgnoringCase(lista[0].Nome, _livroFiccao.Nome);
+            Assert.IsInstanceOf<ProductList>(result.Model);
+            StringAssert.AreEqualIgnoringCase(lista[0].Name, _livroFiccao.Name);
             Assert.AreEqual(lista.Count, 1);
         }
 
         [Test]
         public void QuandoUsuarioFiltarAListaComParametrosVazio_OControleDeveRetornarTodosOsLivros()
         {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
+            var business = new Mock<IProductBusiness>();
+            business.Setup(x => x.GetActiveProducts()).Returns(_listagemDeProdutosEntity);
 
-            _controller = new LivroController(business.Object);
+            _controller = new HomeController(business.Object);
 
-            var result = _controller.PesquisaProduto("", "");
+            var result = _controller.Search("", null);
 
-            var lista = (List<ProdutoModel>)result.ViewData["ListagemDeProdutos"];
+            var lista = ((ProductList)result.Model).Products;
 
-            Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
-            Assert.IsInstanceOf<List<ProdutoModel>>(result.ViewData["ListagemDeProdutos"]);
-            StringAssert.AreEqualIgnoringCase(lista[0].Nome, _livroTDD.Nome);
-            StringAssert.AreEqualIgnoringCase(lista[1].Nome, _livroRomance.Nome);
-            StringAssert.AreEqualIgnoringCase(lista[2].Nome, _livroFiccao.Nome);
+            Assert.IsInstanceOf<ProductList>(result.Model);
+            StringAssert.AreEqualIgnoringCase(lista[0].Name, _livroTDD.Name);
+            StringAssert.AreEqualIgnoringCase(lista[1].Name, _livroRomance.Name);
+            StringAssert.AreEqualIgnoringCase(lista[2].Name, _livroFiccao.Name);
             Assert.AreEqual(lista.Count, 3);
-        }
-
-        [Test]
-        public void QuandoUsuarioFiltarAListaPeloNome_OControleDeveManterOsDadosDoUsuario()
-        {
-            var business = new Mock<ILivroBusiness>();
-            business.Setup(x => x.RecuperarTodosProdutos()).Returns(_listagemDeProdutosEntity);
-
-            _controller = new LivroController(business.Object);
-
-            var result = _controller.PesquisaProduto("TDD", "");
-
-            Assert.Contains("ListagemDeProdutos", result.ViewData.Keys as ICollection);
-            Assert.Contains("logado", result.ViewData.Keys as ICollection);
-            Assert.Contains("tipoUsuario", result.ViewData.Keys as ICollection);
-            Assert.Contains("erroLogin", result.ViewData.Keys as ICollection);
         }
 
         #endregion
@@ -831,11 +615,11 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
         [Test]
         public void AoAcessarAPaginaDeListagemDeProdutos_OsProdutosDevemPossuirIdENaoDeveSerNegativo()
         {
-            _controller = new LivroController(_business.Object);
+            _controller = new HomeController(_business.Object);
 
-            var result = _controller.Index();
+            var result = _controller.Index() as ViewResult;
 
-            var list = result.ViewData["ListagemDeProdutos"] as List<ProdutoModel>;
+            Assert.NotNull(result); var list = ((ProductList)result.Model).Products;
 
             Assert.IsNotNull(list);
 
@@ -843,7 +627,7 @@ namespace LivrariaTDD.MVCTests.ListagemDeProdutos
 
             foreach (var produto in list)
             {
-                Assert.IsTrue(produto.IdProduto >= 0);
+                Assert.IsTrue(produto.ProductId >= 0);
             }
         }
 
