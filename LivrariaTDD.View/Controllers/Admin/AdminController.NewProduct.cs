@@ -13,12 +13,12 @@ namespace LivrariaTDD.Controllers.Admin
         [Authorize (Roles = "admin")]
         public ActionResult NewProduct()
         {
-            return View(new Product());
+            return View(new Models.Product.Product());
         }
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public ActionResult NewProduct(Product model)
+        public ActionResult NewProduct(Models.Product.Product model)
         {
             var newProduct = new Infrastructure.Models.Product();
 

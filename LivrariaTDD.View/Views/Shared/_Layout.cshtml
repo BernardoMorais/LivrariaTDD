@@ -30,13 +30,13 @@
     <div class="container">
       <div class="row">
         <div class="span12">
-          <a href="@Url.Action("Index","Home")" class="logo pull-left"><img src="~/Content/img/logo.png" alt="SimpleOne" title="SimpleOne"></a>
+          <a href="@Url.Action("Index", "Home")" class="logo pull-left"><img src="~/Content/img/logo.png" alt="Livraria TDD" title="Livraria TDD"></a>
           <!-- Top Nav Start -->
           <div class="pull-left">
             <div class="navbar" id="topnav">
               <div class="navbar-inner">
                 <ul class="nav" >
-                    <li><a class="home active" href="#">Home</a>
+                    <li><a href="@Url.Action("Index", "Home")" class="home active" href="#">Home</a>
                     </li>
 @*                    <li><a class="shoppingcart" href="#">Carrinho</a>
                     </li>
@@ -46,14 +46,14 @@
                         var userName = HttpContext.Current.User.Identity.Name;
                         var isAuthenticated = HttpContext.Current.User.Identity.IsAuthenticated;
                     }
-                    @if(isAuthenticated)
+                    @if (isAuthenticated)
                     {
                         <li><a class="myaccount" href="#">@userName</a>
                         </li>
                     }
                     else
                     {
-                        <li><a class="myaccount" href="@Url.Action("Login","Account")">Entrar</a>
+                        <li><a class="myaccount" href="@Url.Action("Login", "Account")">Entrar</a>
                         </li>
                     }
                 </ul>
@@ -94,60 +94,66 @@
         </ul>*@
         
         </div>
-        <div class="pull-left">
-            @using(Html.BeginForm("Search","Home", FormMethod.Post))
-            {  
-                <input type="text" class="input-medium search-query" name="name" placeholder="Pesquisar…">
-                <input type="submit" class="" value="Pesquisar"/>
-            }
-        </div>
+    <div class="pull-left">
+        @using (Html.BeginForm("Search", "Home", FormMethod.Post))
+        {  
+            <input type="text" class="input-medium search-query" name="name" placeholder="Pesquisar…">
+            <input type="submit" class="" value="Pesquisar"/>
+        }
+    </div>
       <div class="pull-right">
         <ul class="nav topcart pull-left">
-          <li class="dropdown hover carticon ">
-            <a href="#" class="dropdown-toggle" > Carrinho de Compras <span class="label label-orange font14">1 item(s)</span> - R$589.50 <b class="caret"></b></a>
-            <ul class="dropdown-menu topcartopen ">
-              <li>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td class="image"><a href="@Url.Action("Index", "Product")"><img width="50" height="50" src="~/Content/img/prodcut-40x40.jpg" alt="product" title="product"></a></td>
-                      <td class="name"><a href="@Url.Action("Index", "Product")">MacBook</a></td>
-                      <td class="quantity">x&nbsp;1</td>
-                      <td class="total">$589.50</td>
-                      <td class="remove"><i class="icon-remove"></i></td>
-                    </tr>
-                    <tr>
-                      <td class="image"><a href="@Url.Action("Index", "Product")"><img width="50" height="50" src="~/Content/img/prodcut-40x40.jpg" alt="product" title="product"></a></td>
-                      <td class="name"><a href="@Url.Action("Index", "Product")">MacBook</a></td>
-                      <td class="quantity">x&nbsp;1</td>
-                      <td class="total">$589.50</td>
-                      <td class="remove"><i class="icon-remove "></i></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td class="textright"><b>Sub-Total:</b></td>
-                      <td class="textright">$500.00</td>
-                    </tr>
-                    <tr>
-                      <td class="textright"><b>Frete:</b></td>
-                      <td class="textright">$87.50</td>
-                    </tr>
-                    <tr>
-                      <td class="textright"><b>Total:</b></td>
-                      <td class="textright">$589.50</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="well pull-right buttonwrap">
-                  <a class="btn btn-orange" href="#">Ver Carrinho</a>
-                  <a class="btn btn-orange" href="#">Finalizar</a>
-                </div>
-              </li>
-            </ul>
-          </li>
+            <li class="dropdown hover carticon ">
+                @{
+                    var shoppingCart = (Dictionary<LivrariaTDD.Models.Product.Product, int>)Session["ShoppingCart"] ??
+                        new Dictionary<LivrariaTDD.Models.Product.Product, int>();
+                }
+                <a href="#" class="dropdown-toggle" > Carrinho de Compras <span class="label label-orange font14">@shoppingCart.Count item(s)</span> - R$589.50 <b class="caret"></b></a>
+                <ul class="dropdown-menu topcartopen ">
+                    <li>
+                        <table>
+                            <tbody>
+                                @foreach (var item in shoppingCart)
+                                {
+                                    <tr>
+                                        <td class="image"><a href="@Url.Action("Detail", "Product", new {id = item.Key.ProductId})"><img width="50" height="50" src="@String.Format("{0}/Content/Images/Products/{1}", HttpContext.Current.Request.Url.Query, item.Key.Photo ?? "noImage.jpg")" alt="product" title="product"></a></td>
+                                        <td class="name"><a href="@Url.Action("Detail", "Product", new {id = item.Key.ProductId})">@item.Key.Name</a></td>
+                                        <td class="quantity">x&nbsp;@shoppingCart[item.Key]</td>
+                                        <td class="total">$@item.Key.Price</td>
+                                        <td class="remove"><i class="icon-remove"></i></td>
+                                    </tr>
+                                }
+                                @if (shoppingCart.Count == 0)
+                                {
+                                    <tr>
+                                        <td class="name">Carrinho Vazio</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <table>
+                            <tbody>
+                                @*<tr>
+                                    <td class="textright"><b>Sub-Total:</b></td>
+                                    <td class="textright">$500.00</td>
+                                </tr>
+                                <tr>
+                                  <td class="textright"><b>Frete:</b></td>
+                                  <td class="textright">$87.50</td>
+                                </tr>*@
+                                <tr>
+                                    <td class="textright"><b>Total:</b></td>
+                                    <td class="textright">$589.50</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="well pull-right buttonwrap">
+                            <a class="btn btn-orange" href="@Url.Action("Index","ShoppingCart")">Ver Carrinho</a>
+                            <a class="btn btn-orange" href="#">Finalizar</a>
+                        </div>
+                    </li>
+                </ul>
+            </li>
         </ul>
       </div>
     </div>
@@ -193,7 +199,7 @@
                 <div>
                     <ul>
                         @{
-                            var categoriesList = (from object category in Enum.GetValues(typeof (Categories)) select category).ToList();
+                            var categoriesList = (from object category in Enum.GetValues(typeof(Categories)) select category).ToList();
                         }
                         @foreach (var category in categoriesList)
                         {
@@ -273,7 +279,7 @@
 
 <!-- Footer -->
 <footer id="footer">
-  <section class="footersocial">
+  @*<section class="footersocial">
     <div class="container">
       <div class="row">
         <div class="span3 aboutus">
@@ -299,8 +305,8 @@
         <div class="span3 facebook">
           <h2>Facebook </h2>
           <div id="fb-root"></div>
-          @*<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
-          <script type="text/javascript">FB.init("");</script>*@
+          <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
+          <script type="text/javascript">FB.init("");</script>
           <script type="text/javascript">
               //<![CDATA[
               document.write('<fb:fan profile_id="80655071208" stream="0"	connections="6"	logobar="0" height="190px"	width="200"css="css/fb.css"></fb:fan> ');
@@ -309,8 +315,8 @@
         </div>
       </div>
     </div>
-  </section>
-  <section class="footerlinks">
+  </section>*@
+  @*<section class="footerlinks">
     <div class="container">
       <div class="info">
         <ul>
@@ -342,7 +348,7 @@
         <div class="span6 textright"> ShopSimple 2012 </div>
       </div>
     </div>
-  </section>
+  </section>*@
   @*<a id="gotop" href="http://www.mafiashare.net">Back to top</a>*@
 </footer>
 <!-- javascript

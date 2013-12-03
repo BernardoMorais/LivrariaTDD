@@ -32,8 +32,8 @@ namespace LivrariaTDD.Controllers.Home
                 {
                     Products =
                         products != null
-                            ? products.Select(x => new Product().InjectFrom(x)).Cast<Product>().ToList()
-                            : new List<Product>()
+                            ? products.Select(x => new Models.Product.Product().InjectFrom(x)).Cast<Models.Product.Product>().ToList()
+                            : new List<Models.Product.Product>()
                 };
 
                 return View("Index", model);
@@ -44,7 +44,7 @@ namespace LivrariaTDD.Controllers.Home
 
                 var model = new ProductList
                 {
-                    Products = new List<Product>()
+                    Products = new List<Models.Product.Product>()
                 };
 
                 return View("Index", model);

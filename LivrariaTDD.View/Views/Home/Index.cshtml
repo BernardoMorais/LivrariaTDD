@@ -1,7 +1,7 @@
 ﻿@model LivrariaTDD.Models.Product.ProductList
 @{
     Layout = "../Shared/_Layout.cshtml";
-    ViewBag.Title = "SimpleOne - A Responsive Html5 Ecommerce Template";
+    ViewBag.Title = "Livraria TDD";
 }
 
 <div id="maincontainer">
@@ -61,7 +61,7 @@
             @foreach(var product in Model.Products)
             {
                 <li class="span3">
-                    <a class="prdocutname" href="@Url.Action("Index", "Product", new {product.ProductId})">@product.Name</a>
+                    <a class="prdocutname" href="@Url.Action("Detail", "Product", new {product.ProductId})">@product.Name</a>
                     <div class="thumbnail">
                         @if(product.Stock == 0)
                         {
@@ -81,10 +81,10 @@
                                  }
                              }
                         }
-                        <a href="#"><img alt="" class="productimage" src="@String.Format("Content/Images/Products/{0}",product.Photo ?? "noImage.jpg")"></a>
+                        <a href="#"><img alt="" class="productimage" src="@String.Format("{0}/Content/Images/Products/{1}",HttpContext.Current.Request.Url.Query, product.Photo ?? "noImage.jpg")"></a>
                         <div class="shortlinks">
-                            <a class="details" href="#">Detalhes</a>
-                            <a class="wishlist" href="#">Lista de Desejos</a>
+                            <a class="details" href="@Url.Action("Detail","Product", new { id = product.ProductId})">Detalhes</a>
+                            @*<a class="wishlist" href="#">Lista de Desejos</a>*@
                             @*<a class="compare" href="#">COMPARE</a>*@
                         </div>
                         <div class="pricetag">
@@ -95,7 +95,7 @@
                             }
                             else
                             {
-                                <a href="#" class="productcart">Adicionar ao Carrinho</a>
+                                <a href="@Url.Action("Add","ShoppingCart", new { productId = product.ProductId})" class="productcart">Adicionar ao Carrinho</a>
                             }
                             <div class="price">
                                 <div class="pricenew">@product.Price</div>

@@ -15,7 +15,7 @@ namespace LivrariaTDD.Controllers.Admin
         {
             var product = _productBusiness.GetInfo(productId);
 
-            var model = new Product();
+            var model = new Models.Product.Product();
 
             model.InjectFrom(product);
 

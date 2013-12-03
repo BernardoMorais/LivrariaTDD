@@ -184,14 +184,10 @@
     <Compile Include="Controllers\Features\FeaturesController.cs" />
     <Compile Include="Controllers\Home\HomeController.Search.cs" />
     <Compile Include="Controllers\Home\HomeController.cs" />
-    <Compile Include="Controllers\Livros\LivroController.Cadastro.cs" />
-    <Compile Include="Controllers\Livros\LivroController.cs" />
-    <Compile Include="Controllers\Livros\LivroController.Exclusao.cs" />
-    <Compile Include="Controllers\Livros\LivroController.Listagem.cs" />
+    <Compile Include="Controllers\Product\ProductController.cs" />
     <Compile Include="Controllers\Pedido\CarrinhoDeComprasController.cs" />
-    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ShoppingCart\ShoppingCartController.cs" />
-    <Compile Include="Controllers\Livros\LivroController.Visualizar.cs" />
+    <Compile Include="Controllers\Product\ProductController.Detail.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

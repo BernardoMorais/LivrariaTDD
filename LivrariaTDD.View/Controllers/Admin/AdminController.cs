@@ -30,8 +30,7 @@ namespace LivrariaTDD.Controllers.Admin
         {
             var products = _productBusiness.GetAll();
 
-            var model = new ProductList
-                {Products = products.Select(x => new Product().InjectFrom(x)).Cast<Product>().ToList()};
+            var model = new ProductList { Products = products.Select(x => new Models.Product.Product().InjectFrom(x)).Cast<Models.Product.Product>().ToList() };
 
             return View("Index", model);
         }

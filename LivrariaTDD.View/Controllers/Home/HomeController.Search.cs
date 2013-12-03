@@ -25,21 +25,21 @@ namespace LivrariaTDD.Controllers.Home
                         lista.Where(
                             x =>
                             ((!String.IsNullOrEmpty(name) && x.Name.ToLower().Contains(name.ToLower())) && (x.Category.Equals(categoty)))).
-                            Select(x => new Product().InjectFrom(x)).Cast<Product>().ToList();
+                            Select(x => new Models.Product.Product().InjectFrom(x)).Cast<Models.Product.Product>().ToList();
                 else if (!String.IsNullOrEmpty(name))
                     model.Products =
                         lista.Where(x => !String.IsNullOrEmpty(name) && x.Name.ToLower().Contains(name.ToLower())).Select(
-                            x => new Product().InjectFrom(x)).Cast<Product>().ToList();
+                            x => new Models.Product.Product().InjectFrom(x)).Cast<Models.Product.Product>().ToList();
                 else if (categoty != null)
                     model.Products =
-                        lista.Where(x => x.Category.Equals(categoty)).Select(x => new Product().InjectFrom(x)).Cast
-                            <Product>().ToList();
+                        lista.Where(x => x.Category.Equals(categoty)).Select(x => new Models.Product.Product().InjectFrom(x)).Cast
+                            <Models.Product.Product>().ToList();
                 else
-                    model.Products = lista.Select(x => new Product().InjectFrom(x)).Cast<Product>().ToList();
+                    model.Products = lista.Select(x => new Models.Product.Product().InjectFrom(x)).Cast<Models.Product.Product>().ToList();
             }
             else
             {
-                model.Products = new List<Product>();
+                model.Products = new List<Models.Product.Product>();
             }
 
             return View("Index",model);

@@ -20,7 +20,7 @@ namespace LivrariaTDD.Controllers.Admin
 
             _productBusiness.Update(product);
 
-            var model = new Product();
+            var model = new Models.Product.Product();
 
             model.InjectFrom(product);
 
@@ -37,7 +37,7 @@ namespace LivrariaTDD.Controllers.Admin
 
             _productBusiness.Update(product);
 
-            var model = new Product();
+            var model = new Models.Product.Product();
 
             model.InjectFrom(product);
 
