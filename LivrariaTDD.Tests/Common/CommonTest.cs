@@ -4,7 +4,7 @@ using LivrariaTDD.Controllers.Home;
 using LivrariaTDD.Controllers.Pedido;
 using LivrariaTDD.Controllers.Product;
 using LivrariaTDD.Infrastructure.BRL.Account;
-using LivrariaTDD.Infrastructure.BRL.Pedido;
+using LivrariaTDD.Infrastructure.BRL.Order;
 using LivrariaTDD.Infrastructure.BRL.Product;
 using Moq;
 using NUnit.Framework;
@@ -21,7 +21,7 @@ namespace LivrariaTDD.MVCTests.Common
             var homeController = new HomeController();
             var productController = new ProductController(new Mock<IProductBusiness>().Object);
             var accountController = new AccountController(new Mock<IAccountBusiness>().Object);
-            var carrinhoDeComprasController = new CarrinhoDeComprasController(new Mock<IPedidoBusiness>().Object);
+            var carrinhoDeComprasController = new CarrinhoDeComprasController(new Mock<IOrderBusiness>().Object);
 
             Assert.IsInstanceOf(typeof(Controller), homeController);
             Assert.IsInstanceOf(typeof(Controller), productController);

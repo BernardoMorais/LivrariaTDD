@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="BRL\Product\IProductBusiness.Cadastro.cs" />
     <Compile Include="BRL\Product\IProductBusiness.Listagem.cs" />
-    <Compile Include="BRL\Order\IPedidoBusiness.cs" />
+    <Compile Include="BRL\Order\IOrderBusiness.cs" />
     <Compile Include="BRL\Account\IAccountBusiness.cs" />
     <Compile Include="BRL\Product\IProductBusiness.Visualizar.cs" />
     <Compile Include="DAL\Context\ILivrariaTDDContext.cs" />

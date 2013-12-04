@@ -310,6 +310,7 @@
     <Content Include="Views\Shared\_Head.cshtml" />
     <Content Include="Views\Shared\_LogOn.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\ShoppingCart\FinishOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

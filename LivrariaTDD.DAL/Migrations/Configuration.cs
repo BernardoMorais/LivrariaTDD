@@ -1,3 +1,5 @@
+using LivrariaTDD.Infrastructure.Models;
+
 namespace LivrariaTDD.DAL.Migrations
 {
     using System;
@@ -14,18 +16,9 @@ namespace LivrariaTDD.DAL.Migrations
 
         protected override void Seed(LivrariaTDD.DAL.Context.LivrariaTDDContext context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            context.PaymentTypes.AddOrUpdate(new PaymentType{ PaymentTypeId = 1, PaymentTypeName = "Boleto"});
+            context.PaymentTypes.AddOrUpdate(new PaymentType { PaymentTypeId = 2, PaymentTypeName = "Débito Online" });
+            context.PaymentTypes.AddOrUpdate(new PaymentType { PaymentTypeId = 3, PaymentTypeName = "Cartão de Crédito" });
         }
     }
 }

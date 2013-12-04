@@ -1,15 +1,14 @@
-using System;
 using System.Collections.Generic;
-using LivrariaTDD.Infrastructure.BRL.Pedido;
+using LivrariaTDD.Infrastructure.BRL.Order;
 using LivrariaTDD.Infrastructure.DAL.Repository;
 
-namespace LivrariaTDD.BRL.Pedido
+namespace LivrariaTDD.BRL.Order
 {
-    public class PedidoBusiness : IPedidoBusiness
+    public class OrderBusiness : IOrderBusiness
     {
         private IOrderRepository _repository;
 
-        public PedidoBusiness(IOrderRepository pedidoRepository)
+        public OrderBusiness(IOrderRepository pedidoRepository)
         {
             _repository = pedidoRepository;
         }
@@ -17,11 +16,6 @@ namespace LivrariaTDD.BRL.Pedido
         public bool SalvarPedido(Infrastructure.Models.Order pedido, int userId, List<int> listaIdProdutos, int idFormaDePagamento)
         {
             return _repository.SalvarPedido(pedido, userId, listaIdProdutos, idFormaDePagamento);
-        }
-
-        public decimal CalcularFrete(int countLivros)
-        {
-            return countLivros*5.0M;
         }
     }
 }

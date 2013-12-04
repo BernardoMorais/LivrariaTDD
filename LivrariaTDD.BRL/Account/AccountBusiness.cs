@@ -37,5 +37,10 @@ namespace LivrariaTDD.BRL.Account
         {
             return _repository.CheckEmail(email);
         }
+
+        public User GetByEmail(string email)
+        {
+            return _repository.RecuperarUsuario(email);
+        }
     }
 }

@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using LivrariaTDD.Infrastructure.BRL.Pedido;
+using LivrariaTDD.Infrastructure.BRL.Order;
 
 namespace LivrariaTDD.Controllers.Pedido
 {
     public class CarrinhoDeComprasController : Controller
     {
-        private IPedidoBusiness _business;
+        private IOrderBusiness _business;
 
-        public CarrinhoDeComprasController(IPedidoBusiness pedidoBusiness)
+        public CarrinhoDeComprasController(IOrderBusiness orderBusiness)
         {
-            _business = pedidoBusiness;
+            _business = orderBusiness;
         }
 
         public JsonResult AdicionarProdutoAoCarrinho(int idProduto)
@@ -39,11 +39,6 @@ namespace LivrariaTDD.Controllers.Pedido
             Session["Carrinho"] = carrinhoDeCompras;
 
             return Json(true);
-        }
-
-        public ActionResult Index()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

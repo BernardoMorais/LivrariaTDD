@@ -81,7 +81,7 @@
                                  }
                              }
                         }
-                        <a href="#"><img alt="" class="productimage" src="@String.Format("{0}/Content/Images/Products/{1}",HttpContext.Current.Request.Url.Query, product.Photo ?? "noImage.jpg")"></a>
+                        <a href="#"><img alt="" class="productimage" src="@String.Format("{0}/Content/Images/Products/{1}",HttpContext.Current.Request.Url.Query.Split('?')[0], product.Photo ?? "noImage.jpg")"></a>
                         <div class="shortlinks">
                             <a class="details" href="@Url.Action("Detail","Product", new { id = product.ProductId})">Detalhes</a>
                             @*<a class="wishlist" href="#">Lista de Desejos</a>*@

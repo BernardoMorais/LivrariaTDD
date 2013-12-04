@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 
-namespace LivrariaTDD.Infrastructure.BRL.Pedido
+namespace LivrariaTDD.Infrastructure.BRL.Order
 {
-    public interface IPedidoBusiness
+    public interface IOrderBusiness
     {
         bool SalvarPedido(Models.Order pedido, int userId, List<int> listaIdProdutos, int idFormaDePagamento);
-        decimal CalcularFrete(int countLivros);
     }
 }

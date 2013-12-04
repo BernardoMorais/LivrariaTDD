@@ -42,7 +42,7 @@
     <Compile Include="Livro\ProductBusiness.cs" />
     <Compile Include="Livro\ProductBusiness.Exclusao.cs" />
     <Compile Include="Livro\ProductBusiness.Listagem.cs" />
-    <Compile Include="Pedido\PedidoBusiness.cs" />
+    <Compile Include="Order\OrderBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Account\AccountBusiness.cs" />
     <Compile Include="Livro\ProductBusiness.Visualizar.cs" />

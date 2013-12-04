@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LivrariaTDD.BRL.Pedido;
-using LivrariaTDD.Infrastructure.BRL.Pedido;
+using LivrariaTDD.BRL.Order;
+using LivrariaTDD.Infrastructure.BRL.Order;
 using LivrariaTDD.Infrastructure.DAL.Repository;
 using LivrariaTDD.Infrastructure.Helpers;
 using LivrariaTDD.Infrastructure.Models;
@@ -15,7 +15,7 @@ namespace LivrariaTDD.MVCTests.CarrinhoDeCompras
     [TestFixture]
     public class CarrinhoDeComprasBusinessTest
     {
-        private IPedidoBusiness _business;
+        private IOrderBusiness _business;
         private Mock<IOrderRepository> _repository;
         private int _userId;
         private List<int> _listaIdProdutos;
@@ -26,7 +26,7 @@ namespace LivrariaTDD.MVCTests.CarrinhoDeCompras
         public void SetUp()
         {
             _repository = new Mock<IOrderRepository>();
-            _business = new PedidoBusiness(_repository.Object);
+            _business = new OrderBusiness(_repository.Object);
             _userId = 1;
             _listaIdProdutos = new List<int> { 1, 2 };
             _idFormaDePagamento = 1;
@@ -74,17 +74,17 @@ namespace LivrariaTDD.MVCTests.CarrinhoDeCompras
             Assert.True(Helpers.ValidarCep(cepValido));
         }
 
-        [Test]
-        public void QuandoAlgumPersonagemSolicitarCalculoDeFrete_OSistemaDeveRetornarOValorDoFrete()
-        {
-            //O valor do frete é uma simulçao, levanto em consideração somente a quantidade de produtos vezes R$ 5,00
-            const decimal freteUmLivro = 5.0M;
-            const decimal freteDoisLivros = 10.0M;
-            const decimal freteCemLivros = 500.0M;
+        //[Test]
+        //public void QuandoAlgumPersonagemSolicitarCalculoDeFrete_OSistemaDeveRetornarOValorDoFrete()
+        //{
+        //    //O valor do frete é uma simulçao, levanto em consideração somente a quantidade de produtos vezes R$ 5,00
+        //    const decimal freteUmLivro = 5.0M;
+        //    const decimal freteDoisLivros = 10.0M;
+        //    const decimal freteCemLivros = 500.0M;
 
-            Assert.AreEqual(freteUmLivro, _business.CalcularFrete(1));
-            Assert.AreEqual(freteDoisLivros, _business.CalcularFrete(2));
-            Assert.AreEqual(freteCemLivros, _business.CalcularFrete(100));
-        }
+        //    Assert.AreEqual(freteUmLivro, _business.CalcularFrete(1));
+        //    Assert.AreEqual(freteDoisLivros, _business.CalcularFrete(2));
+        //    Assert.AreEqual(freteCemLivros, _business.CalcularFrete(100));
+        //}
     }
 }
